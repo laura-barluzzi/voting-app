@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
-export default class LoginButton extends Component {
+export default class LoginButton extends PureComponent {
   render() {
     const { name, logout, login } = this.props;
 

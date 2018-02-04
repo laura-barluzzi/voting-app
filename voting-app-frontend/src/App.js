@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { UserAgentApplication, Logger } from 'msal';
-import './App.css';
 import LoginButton from './LoginButton';
+import Foo from './Foo';
 
 const AdClient = 'e5fb9cfa-5e1a-4f3a-8b07-1828c1b64ba5';
 const AdScopes = ['openid', 'profile'];
@@ -66,7 +66,7 @@ export default class App extends Component {
   }
 
   render() {
-    const { adUser } = this.state;
+    const { adUser, adToken } = this.state;
 
     return (
       <div>
@@ -75,6 +75,7 @@ export default class App extends Component {
           login={this.adLogin}
           logout={this.adLogout}
         />
+        <Foo token={adToken} />
       </div>
     );
   }
