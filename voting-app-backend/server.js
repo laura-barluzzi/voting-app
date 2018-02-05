@@ -37,19 +37,18 @@ app.use('/api/authorized', passport.authenticate('oauth-bearer', { session: fals
 app.use(bodyParser.json());
 
 app.get('/api/polls/:id', (req, res) => {
+
   const poll_id = req.params.id;
-  
-  tableService.retrieveEntity('polls', poll_id, poll_id, (error, result, response) => {
+  const query = new azure.TableQuery().select('poll_json').where('RowKey eq ?', poll_id);
+
+  tableService.queryEntities('polls', query, null, (error, result, response) => {
     if (error) {
       return res.status(404).json({ error });
     }
-
-    const poll = JSON.parse(result.poll_json['_']);
-
+    const poll = JSON.parse(result.entries[0].poll_json['_']);
     return res.status(200).json({ poll });
   });
 });
-
 
 app.get('/api/polls/', (req, res) => {
   const query = new azure.TableQuery().select(['RowKey']['poll_json']);
@@ -65,7 +64,6 @@ app.get('/api/polls/', (req, res) => {
       polls[pollId] = poll.title;
     });
 
-    console.log(polls);
     return res.status(200).json({ polls });
   });
 });
