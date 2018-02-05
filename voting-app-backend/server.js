@@ -43,16 +43,19 @@ app.get('/api/polls/:id', (req, res) => {
 
   tableService.queryEntities('polls', query, null, (error, result, response) => {
     if (error) {
-      return res.status(404).json({ error });
+      return res.status(500).json({ error });
     }
+    if (!result.entries || result.entries.length === 0) {
+      return res.status(404).json({ error: `Poll ${poll_id} not found`})
+    }
+
     const poll = JSON.parse(result.entries[0].poll_json['_']);
     return res.status(200).json({ poll });
   });
 });
 
 app.get('/api/polls/', (req, res) => {
-  const query = new azure.TableQuery().select(['RowKey']['poll_json']);
-
+  const query = new azure.TableQuery().select(['poll_json']);
   tableService.queryEntities('polls', query, null, (error, result, response) => {
     if (error) {
       return res.status(404).json({ error });
@@ -60,8 +63,7 @@ app.get('/api/polls/', (req, res) => {
     const polls = {};
     result.entries.forEach((row) => {
       const poll = JSON.parse(row.poll_json['_']);
-      const pollId = row.RowKey['_'];
-      polls[pollId] = poll.title;
+      polls[poll.id] = poll.title;
     });
 
     return res.status(200).json({ polls });
