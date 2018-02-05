@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { UserAgentApplication, Logger } from 'msal';
+import { Route, Switch } from 'react-router-dom';
+
 import LoginButton from './LoginButton';
-import Foo from './Foo';
+import PollCreator from './PollCreator';
+import Main from './Main';
 
 const AdClient = 'e5fb9cfa-5e1a-4f3a-8b07-1828c1b64ba5';
 const AdScopes = ['openid', 'profile'];
@@ -75,7 +78,10 @@ export default class App extends Component {
           login={this.adLogin}
           logout={this.adLogout}
         />
-        <Foo token={adToken} />
+        <Switch>
+          <Route exact path="/" render={(props) => <Main {...props} token={adToken} />} />
+          <Route path="/create-poll" render={(props) => <PollCreator {...props} token={adToken} />} />
+        </Switch>
       </div>
     );
   }
