@@ -1,16 +1,15 @@
 import React, { PureComponent } from 'react';
+import PollsViewer from './PollsViewer';
 import { Link } from 'react-router-dom';
 
 export default class Main extends PureComponent {
   render() {
-    const { token } = this.props;
-
-    if (token) {
-      return (
+    return (
+      <div>
         <Link to="/create">Create poll</Link>
-      )
-    }
-
-    return null;
+        <hr/>
+        <PollsViewer />
+      </div>
+    );
   }
 }

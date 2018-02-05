@@ -79,6 +79,7 @@ export default class App extends Component {
           login={this.adLogin}
           logout={this.adLogout}
         />
+
         <Switch>
           <Route exact path="/" render={(props) => <Main {...props} token={adToken} />} />
           <Route path="/create" render={(props) => <PollCreator {...props} token={adToken} />} />
