@@ -4,6 +4,7 @@ import { Route, Switch } from 'react-router-dom';
 
 import LoginButton from './LoginButton';
 import PollCreator from './PollCreator';
+import PollViewer from './PollViewer';
 import Main from './Main';
 
 const AdClient = 'e5fb9cfa-5e1a-4f3a-8b07-1828c1b64ba5';
@@ -80,7 +81,8 @@ export default class App extends Component {
         />
         <Switch>
           <Route exact path="/" render={(props) => <Main {...props} token={adToken} />} />
-          <Route path="/create-poll" render={(props) => <PollCreator {...props} token={adToken} />} />
+          <Route path="/create" render={(props) => <PollCreator {...props} token={adToken} />} />
+          <Route path="/poll/:id" render={(props) => <PollViewer {...props} token={adToken} />} />
         </Switch>
       </div>
     );

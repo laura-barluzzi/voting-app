@@ -7,7 +7,7 @@ export default class Main extends PureComponent {
 
     if (token) {
       return (
-        <Link to="/create-poll">Create poll</Link>
+        <Link to="/create">Create poll</Link>
       )
     }
 

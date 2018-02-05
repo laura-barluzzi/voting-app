@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import request from 'request-promise';
+import { Link } from 'react-router-dom';
 
 export default class PollCreator extends Component {
   constructor(props) {
@@ -12,6 +13,14 @@ export default class PollCreator extends Component {
     };
   }
 
+  deleteOption = (i) => {
+    const { options } = this.state;
+    
+    const newOptions = options.slice();
+    newOptions.splice(i, 1);
+    
+    this.setState({ options: newOptions });
+  }
 
   addOption = () => {
     const { options } = this.state;
@@ -21,7 +30,7 @@ export default class PollCreator extends Component {
     this.setState({ options: options.concat([newOption]) });
   }
 
-  saveForm = () => {
+  savePoll = () => {
     const { token } = this.props;
     const { options } = this.state;
 
@@ -42,7 +51,7 @@ export default class PollCreator extends Component {
         'Authorization': `Bearer ${token}`
       },
     }).then(response => {
-      this.setState({ pollId: response.id });
+      this.setState({ pollId: response.id, error: null });
     }).catch(error => {
       this.setState({ error });
     });
@@ -53,8 +62,8 @@ export default class PollCreator extends Component {
 
     return (
       <div>
-        {error ? <p>{JSON.stringify(error)}</p> : null}
-        {pollId ? <p>Created poll {pollId}</p> : null}
+        {error ? <p>{error.error.error}</p> : null}
+        {pollId ? <p><Link to={`/poll/${pollId}`}>Created poll.</Link></p> : null}
 
         <p>
           <label htmlFor="title">Title</label>
@@ -65,12 +74,13 @@ export default class PollCreator extends Component {
           <p key={option}>
             <label htmlFor={`option${option}`}>Option {i + 1}</label>
             <input type="text" ref={`option${option}`} name={`option${option}`} />
+            {i >= 2 ? <button onClick={() => this.deleteOption(i)}>&times;</button> : null}
           </p>
         )}
 
         <button onClick={this.addOption}>Add option</button>
 
-        <button onClick={this.saveForm}>Save</button>
+        <button onClick={this.savePoll}>Save</button>
       </div>
     );
   }
