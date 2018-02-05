@@ -10,12 +10,6 @@ const cors = require('cors');
 
 const entGen = azure.TableUtilities.entityGenerator;
 const tableService = azure.createTableService();
-tableService.createTableIfNotExists('polls', (error) => {
-  if (error) {
-    console.error(error);
-    process.exit(1);
-  }
-});
 const app = express();
 
 const AdClient = 'e5fb9cfa-5e1a-4f3a-8b07-1828c1b64ba5';
@@ -56,6 +50,27 @@ app.get('/api/polls/:id', (req, res) => {
   });
 });
 
+
+app.get('/api/polls/', (req, res) => {
+  const query = new azure.TableQuery().select(['RowKey']['poll_json']);
+
+  tableService.queryEntities('polls', query, null, (error, result, response) => {
+    if (error) {
+      return res.status(404).json({ error });
+    }
+    const polls = {};
+    result.entries.forEach((row) => {
+      const poll = JSON.parse(row.poll_json['_']);
+      const pollId = row.RowKey['_'];
+      polls[pollId] = poll.title;
+    });
+
+    console.log(polls);
+    return res.status(200).json({ polls });
+  });
+});
+
+
 app.post('/api/authorized/polls', (req, res) => {
   const poll = req.body.poll;
   if (!poll) {
@@ -68,16 +83,17 @@ app.post('/api/authorized/polls', (req, res) => {
     return res.status(400).json({error: 'Poll title required'});
   }
   
+  const poll_id = uuid();
+
   const new_options = {};
   poll.options.forEach(name => new_options[name] = 0);
   poll.options = new_options;
 
   poll.creator = req.user.email;
-
-  const poll_id = uuid();
+  poll.id = poll_id;
 
   const entity = {
-    PartitionKey: entGen.String(poll_id),
+    PartitionKey: entGen.String(req.user.email),
     RowKey: entGen.String(poll_id),
     poll_json: entGen.String(JSON.stringify(poll)),
   };
@@ -91,4 +107,11 @@ app.post('/api/authorized/polls', (req, res) => {
   });
 });
 
-app.listen(process.env.PORT);
+tableService.createTableIfNotExists('polls', (error) => {
+  if (error) {
+    console.error(error);
+    process.exit(1);
+  } else {
+    app.listen(process.env.PORT);
+  }
+});
