@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { UserAgentApplication, Logger } from 'msal';
 import { Route, Switch } from 'react-router-dom';
 
-import LoginButton from './LoginButton';
+import Header from './Header';
 import PollCreator from './PollCreator';
 import PollViewer from './PollViewer';
 import Main from './Main';
@@ -74,7 +74,7 @@ export default class App extends Component {
 
     return (
       <div>
-        <LoginButton
+        <Header
           name={adUser != null ? adUser.name : null}
           login={this.adLogin}
           logout={this.adLogout}
