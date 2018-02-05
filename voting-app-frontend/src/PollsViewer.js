@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import request from 'request-promise';
+import { Link } from 'react-router-dom';
 
 export default class PollsViewer extends Component {
   constructor(props) {
@@ -42,7 +43,7 @@ export default class PollsViewer extends Component {
       <div>
         {Object.keys(polls).map((pollId) =>
           <p key={pollId}>
-            {polls[pollId]}
+            <Link to={`/poll/${pollId}`}>{polls[pollId]}</Link>
           </p>
         )}
       </div>
