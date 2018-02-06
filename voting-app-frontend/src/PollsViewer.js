@@ -15,7 +15,7 @@ export default class PollsViewer extends Component {
 
   loadPolls = () => {
     request({
-      uri: `${process.env.REACT_APP_SERVER_HOST}/api/polls/`,
+      uri: `${process.env.REACT_APP_SERVER_HOST}/api/polls`,
       json: true
     }).then(response => {
       this.setState({ polls: response.polls, isLoaded: true });

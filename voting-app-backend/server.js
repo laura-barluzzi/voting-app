@@ -54,12 +54,13 @@ app.get('/api/polls/:id', (req, res) => {
   });
 });
 
-app.get('/api/polls/', (req, res) => {
+app.get('/api/polls', (req, res) => {
   const query = new azure.TableQuery().select(['poll_json']);
   tableService.queryEntities('polls', query, null, (error, result, response) => {
     if (error) {
-      return res.status(404).json({ error });
+      return res.status(500).json({ error });
     }
+
     const polls = {};
     result.entries.forEach((row) => {
       const poll = JSON.parse(row.poll_json['_']);
@@ -69,7 +70,6 @@ app.get('/api/polls/', (req, res) => {
     return res.status(200).json({ polls });
   });
 });
-
 
 app.post('/api/authorized/polls', (req, res) => {
   const poll = req.body.poll;

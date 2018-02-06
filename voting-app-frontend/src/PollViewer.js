@@ -21,7 +21,7 @@ export default class PollViewer extends Component {
       this.setState({ error });
     });
   }
-  
+
   componentDidMount() {
     const pollId = this.props.match.params.id;
     
