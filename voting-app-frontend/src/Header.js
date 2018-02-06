@@ -7,7 +7,7 @@ export default class Main extends PureComponent {
 
   userActionLinks = (userEmail) => {
     const html =  <div><p><Link to="/create">Create poll</Link></p>
-                  <p><Link to={`/${userEmail}/polls`}>My polls</Link></p></div>;
+                  <p><Link to={`/polls/${userEmail}`}>My polls</Link></p></div>;
     return (userEmail) ? html : null;
   };
 

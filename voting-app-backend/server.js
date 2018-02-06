@@ -129,6 +129,26 @@ app.post('/api/authorized/polls', (req, res) => {
   });
 });
 
+app.delete('/api/authorized/polls/:id/:email', (req, res) => {
+
+  const pollId = req.params.id;
+  const creator = req.params.email;
+  const deleted = false;
+  const task = { PartitionKey: {'_': creator}, RowKey: {'_': pollId}};
+
+  if (creator !== req.user.email) {
+    return res.status(403);
+  }
+
+  tableService.deleteEntity('polls', task, function(error, response){
+    if (error) {
+      return res.status(500).json({ error });
+    }
+
+    return res.json({ deleted : response.isSuccessful});
+  });
+});
+
 tableService.createTableIfNotExists('polls', (error) => {
   if (error) {
     console.error(error);

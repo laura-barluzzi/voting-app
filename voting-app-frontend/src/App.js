@@ -6,7 +6,7 @@ import Header from './Header';
 import PollCreator from './PollCreator';
 import PollViewer from './PollViewer';
 import Main from './Main';
-import UserPolls from './UserPolls'
+import UserPolls from './UserPolls';
 
 const AdClient = 'e5fb9cfa-5e1a-4f3a-8b07-1828c1b64ba5';
 const AdScopes = ['openid', 'profile'];
@@ -73,7 +73,7 @@ export default class App extends Component {
   render() {
     const { adUser, adToken } = this.state;
     const email = adUser != null ? adUser.displayableId : null;
-
+    console.log(adToken);
     return (
       <div>
         <Header
@@ -87,7 +87,7 @@ export default class App extends Component {
           <Route exact path="/" render={(props) => <Main {...props} token={adToken} />} />
           <Route path="/create" render={(props) => <PollCreator {...props} token={adToken} />} />
           <Route path="/poll/:id" render={(props) => <PollViewer {...props} token={adToken} />} />
-          <Route path="/:email/polls" render={(props) => <UserPolls {...props} token={adToken} email={email} />} />
+          <Route path="/polls/:email" render={(props) => <UserPolls {...props} token={adToken} email={email} />} />
         </Switch>
       </div>
     );
