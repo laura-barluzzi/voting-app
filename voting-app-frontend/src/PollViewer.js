@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import request from 'request-promise';
+import { Link } from 'react-router-dom';
 
 export default class PollViewer extends Component {
   constructor(props) {
@@ -27,6 +28,9 @@ export default class PollViewer extends Component {
     
     this.loadPoll(pollId);
   }
+  
+  showEditButton = (poll) => 
+    <Link to={{ pathname: `/edit/${poll.id}`, state: { poll } }}>Edit</Link>
 
   render() {
     const { poll } = this.state;
@@ -37,6 +41,8 @@ export default class PollViewer extends Component {
 
     return (
       <div>
+        { this.props.email === poll.creator ? this.showEditButton(poll) : null }
+
         <p>Title: {poll.title}</p>
         <p>Creator: {poll.creator}</p>
 

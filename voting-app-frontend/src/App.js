@@ -86,7 +86,8 @@ export default class App extends Component {
         <Switch>
           <Route exact path="/" render={(props) => <Main {...props} token={adToken} />} />
           <Route path="/create" render={(props) => <PollCreator {...props} token={adToken} />} />
-          <Route path="/poll/:id" render={(props) => <PollViewer {...props} token={adToken} />} />
+          <Route path="/poll/:id" render={(props) => <PollViewer {...props} token={adToken} email={email}/>} />
+          <Route path="/edit/:id" render={(props) => <PollCreator {...props} token={adToken} email={email}/>} />
           <Route path="/polls/:email" render={(props) => <UserPolls {...props} token={adToken} email={email} />} />
         </Switch>
       </div>
