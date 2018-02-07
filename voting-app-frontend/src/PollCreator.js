@@ -7,9 +7,9 @@ export default class PollCreator extends Component {
     super(props);
     
     const { location } = this.props;
-    const editOptions = location.state.poll.options;
-    const options =  editOptions ? Object.keys(editOptions) : ['Option 1', 'Option 2'];
-    
+    const startOptions = ['Option 1', 'Option 2'];
+    const options =  location.state ? Object.keys(location.state.poll.options) : startOptions;
+
     this.state = {
       pollId: null,
       error: null,
@@ -34,25 +34,41 @@ export default class PollCreator extends Component {
     
     this.setState({ options: options.concat([newOption]) });
   }
+  
+  editPoll = (state, newTitle, newOptions) => {
+
+    if (!state || !state.poll) {
+      return null;
+    }
+
+    if (state.poll.title !== newTitle) {
+      state.poll.title = newTitle;
+    }
+    state.poll.options = {};
+    newOptions.forEach(function(newOption) {
+      state.poll.options[newOption] = 0;
+    });
+    return state.poll;
+  }
 
   savePoll = () => {
     const { token, location } = this.props;
     const { options } = this.state;
 
-    const method = location.state ? 'PATCH' : 'POST';
     const pollTitle = this.refs.title.value;
     const pollOptions = options.map(option => this.refs[`option${option}`].value);
+
+    const newPoll = { title: pollTitle, options: pollOptions };
+    const editedPoll = this.editPoll(location.state, pollTitle, pollOptions);
+
+    const poll = editedPoll ? editedPoll : newPoll;
+    const method = location.state ? 'PATCH' : 'POST';
 
     request({
       uri: `${process.env.REACT_APP_SERVER_HOST}/api/authorized/polls`,
       json: true,
       method: method,
-      body: {
-        poll: {
-          title: pollTitle,
-          options: pollOptions,
-        }
-      },
+      body: { poll },
       headers: {
         'Authorization': `Bearer ${token}`
       },
@@ -66,6 +82,7 @@ export default class PollCreator extends Component {
   render() {
     const { error, pollId, options } = this.state;
     const { location } = this.props;
+
     const title = location && location.state ? location.state.poll.title : '';
 
     return (

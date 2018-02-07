@@ -46,7 +46,7 @@ app.get('/api/polls/:id', (req, res) => {
       return res.status(500).json({ error });
     }
     if (!result.entries || result.entries.length === 0) {
-      return res.status(404).json({ error: `Poll ${poll_id} not found`})
+      return res.status(404).json({ error: `Poll ${poll_id} not found`});
     }
 
     const poll = JSON.parse(result.entries[0].poll_json['_']);
@@ -95,10 +95,12 @@ app.get('/api/polls', (req, res) => {
 
 app.post('/api/authorized/polls', (req, res) => {
   const poll = req.body.poll;
+  const optionsArray = Object.keys(poll.options);
+
   if (!poll) {
     return res.status(400).json({error: 'No poll provided'});
   }
-  if (!poll.options || poll.options.length < 2 || poll.options.some(option => !option)) {
+  if (!poll.options || poll.options.length < 2 || optionsArray.some(option => !option)) {
     return res.status(400).json({error: 'Minimum 2 options required'});
   }
   if (!poll.title) {
@@ -108,7 +110,7 @@ app.post('/api/authorized/polls', (req, res) => {
   const poll_id = uuid();
 
   const new_options = {};
-  poll.options.forEach(name => new_options[name] = 0);
+  optionsArray.forEach(name => new_options[name] = 0);
   poll.options = new_options;
 
   poll.creator = req.user.email;
@@ -129,11 +131,41 @@ app.post('/api/authorized/polls', (req, res) => {
   });
 });
 
+app.patch('/api/authorized/polls', (req, res) => {
+  const poll = req.body.poll;
+  const optionsArray = Object.keys(poll.options);
+
+  if (!poll || !poll.id) {
+    return res.status(400).json({error: 'No existing poll provided'});
+  }
+
+  if (!poll.options || poll.options.length < 2 || optionsArray.some(option => !option)) {
+    return res.status(400).json({error: 'Minimum 2 options required'});
+  }
+
+  if (!poll.title) {
+    return res.status(400).json({error: 'Poll title required'});
+  }
+
+  const entity = {
+    PartitionKey: entGen.String(req.user.email),
+    RowKey: entGen.String(poll.id),
+    poll_json: entGen.String(JSON.stringify(poll)),
+  };
+
+  tableService.insertOrReplaceEntity('polls', entity, (error) => {
+    if (error) {
+      return res.status(500).json({ error });
+    }
+
+    res.status(200).json({ id: poll.id });
+  });
+});
+
 app.delete('/api/authorized/polls/:id/:email', (req, res) => {
 
   const pollId = req.params.id;
   const creator = req.params.email;
-  const deleted = false;
   const task = { PartitionKey: {'_': creator}, RowKey: {'_': pollId}};
 
   if (creator !== req.user.email) {
