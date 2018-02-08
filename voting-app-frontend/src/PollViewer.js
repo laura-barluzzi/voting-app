@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import request from 'request-promise';
+import { XAxis, YAxis, BarChart, Bar } from 'recharts';
 import { Link } from 'react-router-dom';
 
 export default class PollViewer extends Component {
@@ -48,12 +49,24 @@ export default class PollViewer extends Component {
     });
   }
 
+  generateData = (poll) => {
+    const data = [];
+    Object.keys(poll.options).forEach((optionName) => {
+      data.push({name: optionName, uv: poll.options[optionName]});
+    });
+    return data;
+  }
+
   render() {
     const { poll } = this.state;
+    const data = poll ? this.generateData(poll) : null;
 
     if (!poll) {
       return null;
     }
+
+    
+    console.log(this.generateData(poll));
 
     return (
       <div>
@@ -68,6 +81,13 @@ export default class PollViewer extends Component {
             <button onClick={() => this.addVote(optionName)}>vote</button>
           </p>
         )}
+
+          <BarChart width={600} height={300} data={data} >
+            <XAxis dataKey="name"/>
+            <YAxis/>
+            <Bar dataKey="uv" stackId="a" fill="#82ca9d" />
+          </BarChart>
+
       </div>
     );
   }
