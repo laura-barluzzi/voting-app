@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import request from 'request-promise';
-import { XAxis, YAxis, BarChart, Bar } from 'recharts';
 import { Link } from 'react-router-dom';
+import PollChart from './PollChart';
 
 export default class PollViewer extends Component {
   constructor(props) {
@@ -33,6 +33,8 @@ export default class PollViewer extends Component {
   showEditButton = (poll) => 
     <Link to={{ pathname: `/edit/${poll.id}`, state: { poll } }}>Edit</Link>
 
+  onBarClicked = (data) => this.addVote(data.name);
+
   addVote = (optionName) => {
     const { poll } = this.state;
     poll.options[optionName]++;
@@ -49,24 +51,12 @@ export default class PollViewer extends Component {
     });
   }
 
-  generateData = (poll) => {
-    const data = [];
-    Object.keys(poll.options).forEach((optionName) => {
-      data.push({name: optionName, uv: poll.options[optionName]});
-    });
-    return data;
-  }
-
   render() {
     const { poll } = this.state;
-    const data = poll ? this.generateData(poll) : null;
 
     if (!poll) {
       return null;
     }
-
-    
-    console.log(this.generateData(poll));
 
     return (
       <div>
@@ -81,12 +71,7 @@ export default class PollViewer extends Component {
             <button onClick={() => this.addVote(optionName)}>vote</button>
           </p>
         )}
-
-          <BarChart width={600} height={300} data={data} >
-            <XAxis dataKey="name"/>
-            <YAxis/>
-            <Bar dataKey="uv" stackId="a" fill="#82ca9d" />
-          </BarChart>
+        <PollChart poll={poll} onBarClicked={this.onBarClicked} />
 
       </div>
     );
