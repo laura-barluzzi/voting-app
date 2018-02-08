@@ -131,6 +131,27 @@ app.post('/api/authorized/polls', (req, res) => {
   });
 });
 
+app.post('/api/vote', (req, res) => {
+  const poll = req.body.poll;
+
+  if (!poll) {
+    return res.status(400).json({error: 'No existing poll provided'});
+  }
+
+  const entity = {
+    PartitionKey: entGen.String(poll.creator),
+    RowKey: entGen.String(poll.id),
+    poll_json: entGen.String(JSON.stringify(poll)),
+  };
+
+  tableService.replaceEntity('polls', entity, (error) => {
+    if (error) {
+      return res.status(500).json({ error });
+    }
+  });
+  res.status(201).json({ poll });
+});
+
 app.patch('/api/authorized/polls', (req, res) => {
   const poll = req.body.poll;
   const optionsArray = Object.keys(poll.options);
