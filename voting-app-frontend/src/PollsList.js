@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import request from 'request-promise';
+import { requestAllPolls } from './Requests';
 import { Link } from 'react-router-dom';
 
-export default class PollsViewer extends Component {
+export default class PollsList extends Component {
   constructor(props) {
     super(props);
 
@@ -13,17 +13,12 @@ export default class PollsViewer extends Component {
     };
   }
 
-  loadPolls = () => {
-    request({
-      uri: `${process.env.REACT_APP_SERVER_HOST}/api/polls`,
-      json: true
-    }).then(response => {
+  loadPolls = () => requestAllPolls().then(response => {
       this.setState({ polls: response.polls, isLoaded: true });
     }).catch(error => {
       this.setState({ error, isLoaded: true });
     });
-  }
-  
+
   componentDidMount() {
     this.loadPolls();
   }
@@ -36,7 +31,7 @@ export default class PollsViewer extends Component {
     }
 
     if (!polls) {
-      return <p>No polls :(</p>;
+      return <p>No polls yet :(</p>;
     }
 
     return (

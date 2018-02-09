@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Link } from 'react-router-dom';
-import request from 'request-promise';
+
+import { requestDeletePoll, requestUserPolls } from './Requests';
 
 
 export default class UserPolls extends PureComponent {
@@ -15,36 +16,22 @@ export default class UserPolls extends PureComponent {
     };
   }
 
-  loadUserPolls = () => {
-    const { email } = this.props;
-    console.log(email);
-    request({
-      uri: `${process.env.REACT_APP_SERVER_HOST}/api/${email}/polls`,
-      json: true
-    }).then(response => {
+  loadUserPolls = () => requestUserPolls(this.props.email).then(response => {
       this.setState({ userPolls: response.polls, isLoaded: true });
     }).catch(error => {
       this.setState({ error, isLoaded: true });
     });
-  }
 
   deletePoll = (pollId) => {
     const { token, email } = this.props;
     const { userPolls } = this.state;
 
-    request({
-      uri: `${process.env.REACT_APP_SERVER_HOST}/api/authorized/polls/${pollId}/${email}`,
-      json: true,
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${token}`
-      },
-    }).then(response => {
+    requestDeletePoll(pollId, email, token).then(response => {
       if (response.deleted) {
         const deletedPoll = userPolls[pollId];
         const newPolls = Object.assign({}, userPolls);
         delete newPolls[pollId];
-        this.setState({ userPolls: newPolls, message: `Poll ${deletedPoll.title} deleted.` })
+        this.setState({ userPolls: newPolls, message: `Poll ${deletedPoll.title} deleted.` });
       }
     }).catch(error => {
       this.setState({ error });

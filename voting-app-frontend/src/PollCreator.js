@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import request from 'request-promise';
+import { requestNewOrUpdatePoll } from './Requests';
 import { Link } from 'react-router-dom';
 
 export default class PollCreator extends Component {
@@ -64,15 +64,7 @@ export default class PollCreator extends Component {
     const poll = editedPoll ? editedPoll : newPoll;
     const method = location.state ? 'PATCH' : 'POST';
 
-    request({
-      uri: `${process.env.REACT_APP_SERVER_HOST}/api/authorized/polls`,
-      json: true,
-      method: method,
-      body: { poll },
-      headers: {
-        'Authorization': `Bearer ${token}`
-      },
-    }).then(response => {
+    requestNewOrUpdatePoll(poll, method, token).then(response => {
       this.setState({ pollId: response.id, error: null });
     }).catch(error => {
       this.setState({ error });
