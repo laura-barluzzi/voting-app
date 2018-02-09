@@ -45,9 +45,7 @@ export default class PollCreator extends Component {
       state.poll.title = newTitle;
     }
     state.poll.options = {};
-    newOptions.forEach(function(newOption) {
-      state.poll.options[newOption] = 0;
-    });
+    newOptions.forEach((newOption) => state.poll.options[newOption] = 0 );
     return state.poll;
   }
 
@@ -56,8 +54,8 @@ export default class PollCreator extends Component {
     const { options } = this.state;
 
     const pollTitle = this.refs.title.value;
-    const pollOptions = options.map(option => this.refs[`option${option}`].value);
-
+    const pollOptions = {};
+    options.forEach((option) => pollOptions[this.refs[`option${option}`].value] = 0 );
     const newPoll = { title: pollTitle, options: pollOptions };
     const editedPoll = this.editPoll(location.state, pollTitle, pollOptions);
 
