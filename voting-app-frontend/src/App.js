@@ -1,4 +1,5 @@
 import './App.css';
+
 import React, { Component } from 'react';
 import { UserAgentApplication, Logger } from 'msal';
 import { Route, Switch } from 'react-router-dom';

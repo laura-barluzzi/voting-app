@@ -16,6 +16,7 @@ export default class Main extends PureComponent {
 
     return (
       <div>
+        <h3>Share you opinion and vote!</h3>
         <LoginButton name={name} login={login} logout={logout} />
         { this.userActionLinks(email) }
         <p><Link to="/">Home</Link></p>
