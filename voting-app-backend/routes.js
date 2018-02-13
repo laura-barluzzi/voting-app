@@ -1,119 +1,86 @@
-const azure = require('azure-storage');
-const entGen = azure.TableUtilities.entityGenerator;
-const tableService = azure.createTableService();
-const { fetchPoll, fetchUserPolls, fetchAllPolls, createPoll } = require('./db');
 const express = require('express');
+const {
+  fetchPoll, fetchUserPolls, fetchAllPolls,
+  createOrUpdatePoll, deletePoll, addVote,
+} = require('./db');
 
-module.exports = (function() {
-  const routes = express.Router();
+const routes = express.Router();
 
-  routes.get('/polls/:id/:email', (req, res) => {
-    const db_result = fetchPoll(req.params.id, req.params.email);
-    const error = db_result.error ? db_result.error : null;
-    return error ? res.status(500).json({ error }) : res.status(200).json({ db_result });
+routes.get('/polls/:id/:email', (req, res) =>
+  fetchPoll(req.params.email, req.params.id)
+    .then(result => res.status(200).json(result))
+    .catch(error => res.status(500).json(error))
+);
+
+routes.get('/:email/polls', (req, res) =>
+  fetchUserPolls(req.params.email)
+    .then(result => res.status(200).json(result))
+    .catch(error => res.status(500).json(error))
+);
+
+routes.get('/polls', (req, res) => 
+  fetchAllPolls()
+    .then(result => res.status(200).json(result))
+    .catch(error => res.status(500).json(error))
+);
+
+routes.post('/authorized/polls', (req, res) => {
+  const poll = req.body.poll;
+  const optionsArray = Object.keys(poll.options);
+
+  if (!poll) {
+    return res.status(400).json({error: 'No poll provided'});
+  }
+  if (!poll.options || poll.options.length < 2 || optionsArray.some(option => !option)) {
+    return res.status(400).json({error: 'Minimum 2 options required'});
+  }
+  if (!poll.title) {
+    return res.status(400).json({error: 'Poll title required'});
+  }
+
+  createOrUpdatePoll(poll, req.user.email)
+    .then((result) => res.status(200).json(result))
+    .catch((error) => res.status(500).json(error));
 });
 
-  routes.get('/:email/polls', (req, res) => {
-    const db_result = fetchUserPolls(req.params.email);
-    const error = db_result.error ? db_result.error : null;
-    return error ? res.status(500).json({ error }) : res.status(200).json({ db_result });
-  });
+routes.post('/vote/:email/:id/:option', (req, res) =>
+  addVote(req.params.email, req.params.id, req.params.option)
+    .then(result => res.status(200).json(result))
+    .catch(error => res.status(500).json(error))
+);
 
-  routes.get('/polls', (req, res) => {
-    const db_result = fetchAllPolls();
-    const error = db_result.error ? db_result.error : null;
-    return error ? res.status(500).json({ error }) : res.status(200).json({ db_result });
-  });
+routes.patch('/authorized/polls', (req, res) => {
+  const poll = req.body.poll;
+  const optionsArray = Object.keys(poll.options);
 
-  routes.post('/authorized/polls', (req, res) => {
-    const poll = req.params.poll;
-    const optionsArray = Object.keys(poll.options);
+  if (!poll || !poll.id) {
+    return res.status(400).json({error: 'No existing poll provided'});
+  }
 
-    if (!poll) {
-      return res.status(400).json({error: 'No poll provided'});
-    }
-    if (!poll.options || poll.options.length < 2 || optionsArray.some(option => !option)) {
-      return res.status(400).json({error: 'Minimum 2 options required'});
-    }
-    if (!poll.title) {
-      return res.status(400).json({error: 'Poll title required'});
-    }
+  if (!poll.options || poll.options.length < 2 || optionsArray.some(option => !option)) {
+    return res.status(400).json({error: 'Minimum 2 options required'});
+  }
 
-    const db_result = createPoll(poll, req.user.email);
-    const error = db_result.error ? db_result.error : null;
-    return error ? res.status(500).json({ error }) : res.status(200).json({ db_result }); 
-  });
+  if (!poll.title) {
+    return res.status(400).json({error: 'Poll title required'});
+  }
 
-  routes.post('/vote', (req, res) => {
-    const poll = req.body.poll;
-  
-    if (!poll) {
-      return res.status(400).json({error: 'No existing poll provided'});
-    }
+  if (poll.creator !== req.user.email) { return res.status(403) }
 
-    const entity = {
-      PartitionKey: entGen.String(poll.creator),
-      RowKey: entGen.String(poll.id),
-      poll_json: entGen.String(JSON.stringify(poll)),
-    };
+  createOrUpdatePoll(poll, req.user.email)
+    .then((result) => res.status(200).json(result))
+    .catch((error) => res.status(500).json(error));
+});
 
-    tableService.replaceEntity('polls', entity, (error) => {
-      if (error) {
-        return res.status(500).json({ error });
-      }
-    });
-    res.status(201).json({ poll });
-  });
+routes.delete('/authorized/polls/:id/:email', (req, res) => {
+  const pollCreator = req.params.email;
 
-  routes.patch('/authorized/polls', (req, res) => {
-    const poll = req.body.poll;
-    const optionsArray = Object.keys(poll.options);
+  if (pollCreator !== req.user.email) { return res.status(403) }
 
-    if (!poll || !poll.id) {
-      return res.status(400).json({error: 'No existing poll provided'});
-    }
+  deletePoll(req.params.id, pollCreator)
+    .then(result => res.status(200).json(result))
+    .catch(error => res.status(500).json(error));
+});
 
-    if (!poll.options || poll.options.length < 2 || optionsArray.some(option => !option)) {
-      return res.status(400).json({error: 'Minimum 2 options required'});
-    }
-  
-    if (!poll.title) {
-      return res.status(400).json({error: 'Poll title required'});
-    }
 
-    const entity = {
-      PartitionKey: entGen.String(req.user.email),
-      RowKey: entGen.String(poll.id),
-      poll_json: entGen.String(JSON.stringify(poll)),
-    };
-
-    tableService.insertOrReplaceEntity('polls', entity, (error) => {
-      if (error) {
-        return res.status(500).json({ error });
-      }
-
-      res.status(200).json({ id: poll.id });
-    });
-  });
-
-  routes.delete('/authorized/polls/:id/:email', (req, res) => {
-
-    const pollId = req.params.id;
-    const creator = req.params.email;
-    const task = { PartitionKey: {'_': creator}, RowKey: {'_': pollId}};
-  
-    if (creator !== req.user.email) {
-      return res.status(403);
-    }
-
-    tableService.deleteEntity('polls', task, function(error, response){
-      if (error) {
-        return res.status(500).json({ error });
-      }
-
-      return res.json({ deleted : response.isSuccessful});
-    });
-  });
-
-  return routes;
-})();
+module.exports = routes;

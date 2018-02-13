@@ -1,15 +1,16 @@
+const Promise = require('promise');
 const azure = require('azure-storage');
-const entGen = azure.TableUtilities.entityGenerator;
 const tableService = azure.createTableService();
+const entGen = azure.TableUtilities.entityGenerator;
 const uuid = require('uuid/v4');
 
-export const createPoll = (poll, pollCreator) => {
+const createOrUpdatePoll = (poll, pollCreator) => {
   const new_options = {};
   Object.keys(poll.options).forEach(name => new_options[name] = 0);
   poll.options = new_options;
 
   poll.creator = pollCreator;
-  poll.id = uuid();
+  if (poll.id == null) poll.id = uuid();
 
   const entity = {
     PartitionKey: entGen.String(pollCreator),
@@ -17,55 +18,115 @@ export const createPoll = (poll, pollCreator) => {
     poll_json: entGen.String(JSON.stringify(poll)),
   };
 
-  tableService.insertEntity('polls', entity, (error) => {
-    if (error) { return { error } }
-    return { id: poll.id };
+  return new Promise((resolve, reject) => {
+    tableService.insertOrReplaceEntity('polls', entity, (error) => {
+      if (error) return reject({ error });
+      return resolve(poll);
+    });
   });
 };
 
-export const fetchPoll = (pollCreator, pollId) => {
-  tableService.retrieveEntity('polls', pollCreator, pollId, (error, result, response) => {
-    if (error) { return { error } } // res.status(500).json({ error });
+const addVote = (pollCreator, pollId, option) => {
+  return new Promise((resolve, reject) => {
+    fetchPoll(pollCreator, pollId)
+      .then(poll => {
+        poll.options[option]++;
+      
+        const entity = {
+          PartitionKey: entGen.String(poll.creator),
+          RowKey: entGen.String(poll.id),
+          poll_json: entGen.String(JSON.stringify(poll)),
+        };
 
-    if (!result) {
-      return { error: `Poll ${pollId} created by ${pollCreator} not found`}; //res.status(404).json({ error: `Poll ${pollId} created by ${pollCreator} not found`});
-    }
-
-    return JSON.parse(result.poll_json['_']); //res.status(200).json({ poll });
+        tableService.replaceEntity('polls', entity, (error) => {
+          if (error) return reject({ error });
+          return resolve(poll);
+        });
+      })
+      .catch(reject);
   });
 };
 
-export const deletePoll = () => {};
+const fetchPoll = (pollCreator, pollId) => {
+  return new Promise((resolve, reject) => {
+    tableService.retrieveEntity('polls', pollCreator, pollId, (error, result, response) => {
+      if (error) return reject({ error });
 
-export const fetchUserPolls = (userEmail) => {
+      if (!result) {
+        return reject({ error: `Poll ${pollId} created by ${pollCreator} not found`});
+      }
+
+      return resolve(JSON.parse(result.poll_json['_']));
+    });
+  });
+};
+
+const deletePoll = (pollId, pollCreator) => {
+  const task = { PartitionKey: {'_': pollCreator}, RowKey: {'_': pollId}};
+  return new Promise((resolve, reject) => {
+    tableService.deleteEntity('polls', task, (error, response) => {
+      if (error) return reject({ error });
+      return resolve({ deleted : response.isSuccessful });
+    });
+  });
+};
+
+const fetchUserPolls = (userEmail) => {
   const query = new azure.TableQuery()
                 .select('poll_json')
                 .where('PartitionKey eq ?', userEmail);
 
-  tableService.queryEntities('polls', query, null, (error, result, response) => {
-    if (error) { return { error } }
+  return new Promise((resolve, reject) => {
+    tableService.queryEntities('polls', query, null, (error, result, response) => {
+      if (error) return reject({ error });
 
-    const polls = {};
-    result.entries.forEach((row) => {
-      const poll = JSON.parse(row.poll_json['_']);
-      polls[poll.id] = poll;
+      const polls = {};
+      result.entries.forEach((row) => {
+        const poll = JSON.parse(row.poll_json['_']);
+        polls[poll.id] = poll;
+      });
+
+      return resolve({ polls });
     });
-
-    return { polls };
   });
 };
 
-export const fetchAllPolls = () => {
+const fetchAllPolls = () => {
   const query = new azure.TableQuery().select(['poll_json']);
-  tableService.queryEntities('polls', query, null, (error, result, response) => {
-    if (error) { return { error } }
 
-    const polls = {};
-    result.entries.forEach((row) => {
-      const poll = JSON.parse(row.poll_json['_']);
-      polls[poll.id] = poll;
+  return new Promise((resolve, reject) => {
+    tableService.queryEntities('polls', query, null, (error, result, response) => {
+      if (error) return reject({ error });
+
+      const polls = {};
+      result.entries.forEach((row) => {
+        const poll = JSON.parse(row.poll_json['_']);
+        polls[poll.id] = poll;
+      });
+
+      return resolve({ polls });
     });
-
-    return { polls };
   });
+
+};
+
+const createTable = (app) => {
+  return new Promise((resolve, reject) => {
+    tableService.createTableIfNotExists('polls', (error) => {
+      if (error) {
+        console.error(error);
+        process.exit(1);
+        reject();
+      } else {
+        app.listen(process.env.PORT);
+        resolve();
+      }
+    });
+  });
+
+};
+
+module.exports = {
+  fetchPoll, fetchUserPolls, fetchAllPolls, createOrUpdatePoll,
+  deletePoll, createTable, addVote,
 };

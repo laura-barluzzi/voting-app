@@ -21,12 +21,12 @@ export const requestOnePoll = (pollId, pollCreator) => {
   });
 };
 
-export const requestUpdateVote = (poll) => {
+export const requestUpdateVote = (poll, option) => {
   return  request({
-    uri: `${process.env.REACT_APP_SERVER_HOST}/api/vote`,
+    uri: `${process.env.REACT_APP_SERVER_HOST}/api/vote/${poll.creator}/${poll.id}/${option}`,
     json: true,
     method: 'POST',
-    body: { poll },
+    body: {},
   });
 };
 

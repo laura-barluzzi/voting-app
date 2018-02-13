@@ -8,7 +8,7 @@ const express = require('express');
 const cors = require('cors');
 const routes = require('./routes');
 
-const tableService = azure.createTableService();
+const { createTable } = require('./db');
 const app = express();
 
 const AdClient = 'e5fb9cfa-5e1a-4f3a-8b07-1828c1b64ba5';
@@ -37,11 +37,4 @@ app.use(bodyParser.json());
 
 app.use('/api', routes);
 
-tableService.createTableIfNotExists('polls', (error) => {
-  if (error) {
-    console.error(error);
-    process.exit(1);
-  } else {
-    app.listen(process.env.PORT);
-  }
-});
+createTable(app);

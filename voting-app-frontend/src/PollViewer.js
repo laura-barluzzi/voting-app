@@ -13,22 +13,15 @@ export default class PollViewer extends Component {
     };
   }
 
-  loadPoll = (pollId, pollCreator) => requestOnePoll(pollId, pollCreator).then(response => {
-      this.setState({ poll: response.poll });
-    }).catch(error => {
-      this.setState({ error });
-    });
+  loadPoll = (pollId, pollCreator) =>
+    requestOnePoll(pollId, pollCreator)
+      .then(response => this.setState({ poll: response }))
+      .catch(error => this.setState({ error }));
 
-  addVote = (optionName) => {
-    const { poll } = this.state;
-    poll.options[optionName]++;
-
-    requestUpdateVote(poll).then(response => {
-      this.setState({ poll: response.poll, error: null });
-    }).catch(error => {
-      this.setState({ error });
-    });
-  }
+  addVote = (optionName) =>
+    requestUpdateVote(this.state.poll, optionName)
+      .then(response => this.setState({ poll: response, error: null }))
+      .catch(error => this.setState({ error }));
 
   onBarClicked = (data) => this.addVote(data.name);
 
