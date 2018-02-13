@@ -7,20 +7,21 @@ const express = require('express');
 module.exports = (function() {
   const routes = express.Router();
 
-  routes.get('/polls/:id', (req, res) => {
+  routes.get('/polls/:id/:email', (req, res) => {
 
-    const poll_id = req.params.id;
-    const query = new azure.TableQuery().select('poll_json').where('RowKey eq ?', poll_id);
-  
-    tableService.queryEntities('polls', query, null, (error, result, response) => {
+    const pollId = req.params.id;
+    const pollCreator = req.params.email;
+
+    tableService.retrieveEntity('polls', pollCreator, pollId, (error, result, response) => {
       if (error) {
         return res.status(500).json({ error });
       }
-      if (!result.entries || result.entries.length === 0) {
-        return res.status(404).json({ error: `Poll ${poll_id} not found`});
+
+      if (!result) {
+        return res.status(404).json({ error: `Poll ${pollId} created by ${pollCreator} not found`});
       }
-  
-      const poll = JSON.parse(result.entries[0].poll_json['_']);
+
+      const poll = JSON.parse(result.poll_json['_']);
       return res.status(200).json({ poll });
     });
 });
@@ -57,7 +58,7 @@ module.exports = (function() {
       const polls = {};
       result.entries.forEach((row) => {
         const poll = JSON.parse(row.poll_json['_']);
-        polls[poll.id] = poll.title;
+        polls[poll.id] = poll;
       });
 
       return res.status(200).json({ polls });

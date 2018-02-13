@@ -13,7 +13,7 @@ export default class PollViewer extends Component {
     };
   }
 
-  loadPoll = (pollId) => requestOnePoll(pollId).then(response => {
+  loadPoll = (pollId, pollCreator) => requestOnePoll(pollId, pollCreator).then(response => {
       this.setState({ poll: response.poll });
     }).catch(error => {
       this.setState({ error });
@@ -32,7 +32,7 @@ export default class PollViewer extends Component {
 
   onBarClicked = (data) => this.addVote(data.name);
 
-  componentDidMount() { this.loadPoll(this.props.match.params.id) }
+  componentDidMount() { this.loadPoll(this.props.match.params.id, this.props.match.params.email) }
 
   render() {
     const { poll } = this.state;

@@ -64,7 +64,7 @@ export default class UserPolls extends PureComponent {
         { message ? message : null }
         {Object.keys(userPolls).map((pollId) =>
           <p key={pollId}>
-            <Link to={`/poll/${pollId}`}>{userPolls[pollId].title}</Link>
+            <Link to={`/poll/${pollId}/${userPolls[pollId].creator}`}>{userPolls[pollId].title}</Link>
             <button onClick={() => this.deletePoll(pollId)}>&times;</button>
           </p>
         )}

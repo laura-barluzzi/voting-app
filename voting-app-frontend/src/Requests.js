@@ -14,9 +14,9 @@ export const requestUserPolls = (userEmail) => {
   });
 };
 
-export const requestOnePoll = (pollId) => {
+export const requestOnePoll = (pollId, pollCreator) => {
   return request({
-    uri: `${process.env.REACT_APP_SERVER_HOST}/api/polls/${pollId}`,
+    uri: `${process.env.REACT_APP_SERVER_HOST}/api/polls/${pollId}/${pollCreator}`,
     json: true
   });
 };
