@@ -17,6 +17,7 @@ export default class PollCreator extends Component {
       error: null,
       message: '',
       editingPoll: false,
+      saved: false,
       options
     };
 
@@ -63,6 +64,7 @@ export default class PollCreator extends Component {
         pollId: response.id,
         pollCreator: response.creator,
         message: '',
+        saved: true,
         error: null });
     }).catch(error => {
       this.setState({ error });
@@ -75,6 +77,7 @@ export default class PollCreator extends Component {
         pollCreator: response.creator,
         message: '',
         editingPoll: false,
+        saved: true,
         error: null });
     }).catch(error => {
       this.setState({ error });
@@ -85,7 +88,7 @@ export default class PollCreator extends Component {
   }
 
   render() {
-    const { error, pollId, options, pollCreator, message } = this.state;
+    const { error, pollId, options, pollCreator, message, saved } = this.state;
     const { location } = this.props;
 
     const title = location && location.state ? location.state.poll.title : '';
@@ -96,22 +99,26 @@ export default class PollCreator extends Component {
         { error ? <p>{error.error.error}</p> : null }
         { pollId ? <p><Link to={`/poll/${pollId}/${pollCreator}`}>See your poll.</Link></p> : null }
 
-        <p>
-          <label htmlFor="title">Title</label>
-          <input type="text" ref="title" name="title" defaultValue={title} />
-        </p>
-
-        {options.map((option, i) =>
-          <p key={option}>
-            <label htmlFor={`option${option}`}>Option {i + 1}</label>
-            <input type="text" ref={`option${option}`} name={`option${option}`} defaultValue={option}/>
-            {i >= 2 ? <button onClick={() => this.deleteOption(i)}>&times;</button> : null}
-          </p>
-        )}
-
-        <button onClick={this.addOption}>Add option</button>
-
-        <button onClick={this.checkPollEntries}>Save</button>
+        { saved ? null : 
+          <div>
+            <p>
+              <label htmlFor="title">Title</label>
+              <input type="text" ref="title" name="title" defaultValue={title} />
+            </p>
+    
+            {options.map((option, i) =>
+              <p key={option}>
+                <label htmlFor={`option${option}`}>Option {i + 1}</label>
+                <input type="text" ref={`option${option}`} name={`option${option}`} defaultValue={option}/>
+                {i >= 2 ? <button onClick={() => this.deleteOption(i)}>&times;</button> : null}
+              </p>
+            )}
+    
+            <button onClick={this.addOption}>Add option</button>
+    
+            <button onClick={this.checkPollEntries}>Save</button>
+          </div>
+        }
       </div>
     );
   }
