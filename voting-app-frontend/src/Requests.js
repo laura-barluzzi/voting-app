@@ -30,11 +30,23 @@ export const requestUpdateVote = (poll, option) => {
   });
 };
 
-export const requestNewOrUpdatePoll = (poll, method, token) => {
+export const requestNewPoll = (poll, token) => {
   return   request({
-    uri: `${process.env.REACT_APP_SERVER_HOST}/api/authorized/polls`,
+    uri: `${process.env.REACT_APP_SERVER_HOST}/api/authorized/poll/create`,
     json: true,
-    method,
+    method: 'POST',
+    body: { poll },
+    headers: {
+      'Authorization': `Bearer ${token}`
+    },
+  });
+};
+
+export const requestUpdatePoll = (poll, token) => {
+  return   request({
+    uri: `${process.env.REACT_APP_SERVER_HOST}/api/authorized/${poll.id}/${poll.creator}/poll/update`,
+    json: true,
+    method: 'PATCH',
     body: { poll },
     headers: {
       'Authorization': `Bearer ${token}`

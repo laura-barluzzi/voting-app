@@ -1,5 +1,6 @@
 const express = require('express');
 const uuid = require('uuid/v4');
+
 const {
   fetchPoll, fetchUserPolls, fetchAllPolls,
   createOrUpdatePoll, deletePoll, addVote,
@@ -25,7 +26,7 @@ routes.get('/polls', (req, res) =>
     .catch(error => res.status(500).json(error))
 );
 
-routes.post('/authorized/polls', (req, res) => {
+routes.post('/authorized/poll/create', (req, res) => {
   const poll = req.body.poll;
 
   poll.creator = req.user.email;
@@ -42,27 +43,14 @@ routes.post('/vote/:email/:id/:option', (req, res) =>
     .catch(error => res.status(500).json(error))
 );
 
-routes.patch('/authorized/polls', (req, res) => {
+routes.patch('/authorized/:id/:email/poll/update', (req, res) => {
   const poll = req.body.poll;
-  const optionsArray = Object.keys(poll.options);
 
-  if (!poll || !poll.id) {
-    return res.status(400).json({error: 'No existing poll provided'});
-  }
-
-  if (!poll.options || poll.options.length < 2 || optionsArray.some(option => !option)) {
-    return res.status(400).json({error: 'Minimum 2 options required'});
-  }
-
-  if (!poll.title) {
-    return res.status(400).json({error: 'Poll title required'});
+  if (poll.id !== req.params.id) {
+    return res.status(400).json({error: 'Poll not recognized'});
   }
 
   if (poll.creator !== req.user.email) { return res.status(403) }
-
-  const new_options = {};
-  Object.keys(poll.options).forEach(name => new_options[name] = 0);
-  poll.options = new_options;
 
   createOrUpdatePoll(poll)
     .then((result) => res.status(200).json(result))

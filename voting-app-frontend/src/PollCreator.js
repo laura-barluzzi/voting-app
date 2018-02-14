@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { requestNewOrUpdatePoll } from './Requests';
+import { requestNewPoll, requestUpdatePoll } from './Requests';
 import { Link } from 'react-router-dom';
 
 export default class PollCreator extends Component {
@@ -7,6 +7,7 @@ export default class PollCreator extends Component {
     super(props);
     
     const { location } = this.props;
+
     const startOptions = ['Option 1', 'Option 2'];
     const options =  location.state ? Object.keys(location.state.poll.options) : startOptions;
 
@@ -15,6 +16,7 @@ export default class PollCreator extends Component {
       pollCreator: null,
       error: null,
       message: '',
+      editingPoll: false,
       options
     };
 
@@ -38,7 +40,7 @@ export default class PollCreator extends Component {
   }
 
   checkPollEntries = () => {
-    const { options } = this.state;
+    const { options, editingPoll } = this.state;
     const { location } = this.props;
     const pollTitle = this.refs.title.value;
     const pollOptions = {};
@@ -52,14 +54,11 @@ export default class PollCreator extends Component {
     const newPoll = JSON.parse(JSON.stringify(location.state ? location.state.poll : {}));
     newPoll.title = pollTitle;
     newPoll.options = pollOptions;
-    return this.savePoll(newPoll);
+    return  editingPoll ? this.saveChangedPoll(newPoll) : this.saveNewPoll(newPoll);
   }
 
-  savePoll = (newPoll) => {
-    const { token, location } = this.props;
-    const method = location.state ? 'PATCH' : 'POST';
-
-    requestNewOrUpdatePoll(newPoll, method, token).then(response => {
+  saveNewPoll = (newPoll) =>
+    requestNewPoll(newPoll, this.props.token).then(response => {
       this.setState({ 
         pollId: response.id,
         pollCreator: response.creator,
@@ -68,6 +67,21 @@ export default class PollCreator extends Component {
     }).catch(error => {
       this.setState({ error });
     });
+
+  saveChangedPoll = (newPoll) =>
+    requestUpdatePoll(newPoll, this.props.token).then(response => {
+      this.setState({ 
+        pollId: response.id,
+        pollCreator: response.creator,
+        message: '',
+        editingPoll: false,
+        error: null });
+    }).catch(error => {
+      this.setState({ error });
+    });
+
+  componentDidMount() { 
+    if (this.props.location.state && this.props.location.state.poll) this.setState({ editingPoll: true });
   }
 
   render() {
@@ -79,8 +93,8 @@ export default class PollCreator extends Component {
     return (
       <div>
         { message ? message : null }
-        {error ? <p>{error.error.error}</p> : null}
-        {pollId ? <p><Link to={`/poll/${pollId}/${pollCreator}`}>See your poll.</Link></p> : null}
+        { error ? <p>{error.error.error}</p> : null }
+        { pollId ? <p><Link to={`/poll/${pollId}/${pollCreator}`}>See your poll.</Link></p> : null }
 
         <p>
           <label htmlFor="title">Title</label>
