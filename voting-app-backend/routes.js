@@ -1,4 +1,5 @@
 const express = require('express');
+const uuid = require('uuid/v4');
 const {
   fetchPoll, fetchUserPolls, fetchAllPolls,
   createOrUpdatePoll, deletePoll, addVote,
@@ -37,8 +38,14 @@ routes.post('/authorized/polls', (req, res) => {
   if (!poll.title) {
     return res.status(400).json({error: 'Poll title required'});
   }
+  const new_options = {};
+  Object.keys(poll.options).forEach(name => new_options[name] = 0);
+  poll.options = new_options;
 
-  createOrUpdatePoll(poll, req.user.email)
+  poll.creator = req.user.email;
+  poll.id = uuid();
+
+  createOrUpdatePoll(poll)
     .then((result) => res.status(200).json(result))
     .catch((error) => res.status(500).json(error));
 });
@@ -67,7 +74,11 @@ routes.patch('/authorized/polls', (req, res) => {
 
   if (poll.creator !== req.user.email) { return res.status(403) }
 
-  createOrUpdatePoll(poll, req.user.email)
+  const new_options = {};
+  Object.keys(poll.options).forEach(name => new_options[name] = 0);
+  poll.options = new_options;
+
+  createOrUpdatePoll(poll)
     .then((result) => res.status(200).json(result))
     .catch((error) => res.status(500).json(error));
 });

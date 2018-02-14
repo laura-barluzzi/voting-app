@@ -2,18 +2,11 @@ const Promise = require('promise');
 const azure = require('azure-storage');
 const tableService = azure.createTableService();
 const entGen = azure.TableUtilities.entityGenerator;
-const uuid = require('uuid/v4');
 
-const createOrUpdatePoll = (poll, pollCreator) => {
-  const new_options = {};
-  Object.keys(poll.options).forEach(name => new_options[name] = 0);
-  poll.options = new_options;
 
-  poll.creator = pollCreator;
-  if (poll.id == null) poll.id = uuid();
-
+const createOrUpdatePoll = (poll) => {
   const entity = {
-    PartitionKey: entGen.String(pollCreator),
+    PartitionKey: entGen.String(poll.creator),
     RowKey: entGen.String(poll.id),
     poll_json: entGen.String(JSON.stringify(poll)),
   };
