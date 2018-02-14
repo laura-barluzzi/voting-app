@@ -14,6 +14,7 @@ export default class PollCreator extends Component {
       pollId: null,
       pollCreator: null,
       error: null,
+      message: '',
       options
     };
 
@@ -35,36 +36,49 @@ export default class PollCreator extends Component {
     
     this.setState({ options: options.concat([newOption]) });
   }
-  
-  savePoll = () => {
-    const { token, location } = this.props;
-    const { options } = this.state;
 
+  checkPollEntries = () => {
+    const { options } = this.state;
+    const { location } = this.props;
     const pollTitle = this.refs.title.value;
     const pollOptions = {};
     options.forEach((option) => pollOptions[this.refs[`option${option}`].value] = 0);
 
+    if (Object.keys(pollOptions).length < 2 || pollOptions.hasOwnProperty(''))
+      return this.setState({ message: 'Minimum 2 options required'});
+
+    if (!pollTitle) return this.setState({ message: 'Poll title required'});
+
     const newPoll = JSON.parse(JSON.stringify(location.state ? location.state.poll : {}));
     newPoll.title = pollTitle;
     newPoll.options = pollOptions;
+    return this.savePoll(newPoll);
+  }
 
+  savePoll = (newPoll) => {
+    const { token, location } = this.props;
     const method = location.state ? 'PATCH' : 'POST';
 
     requestNewOrUpdatePoll(newPoll, method, token).then(response => {
-      this.setState({ pollId: response.id, pollCreator: response.creator, error: null });
+      this.setState({ 
+        pollId: response.id,
+        pollCreator: response.creator,
+        message: '',
+        error: null });
     }).catch(error => {
       this.setState({ error });
     });
   }
 
   render() {
-    const { error, pollId, options, pollCreator } = this.state;
+    const { error, pollId, options, pollCreator, message } = this.state;
     const { location } = this.props;
 
     const title = location && location.state ? location.state.poll.title : '';
 
     return (
       <div>
+        { message ? message : null }
         {error ? <p>{error.error.error}</p> : null}
         {pollId ? <p><Link to={`/poll/${pollId}/${pollCreator}`}>See your poll.</Link></p> : null}
 
@@ -83,7 +97,7 @@ export default class PollCreator extends Component {
 
         <button onClick={this.addOption}>Add option</button>
 
-        <button onClick={this.savePoll}>Save</button>
+        <button onClick={this.checkPollEntries}>Save</button>
       </div>
     );
   }

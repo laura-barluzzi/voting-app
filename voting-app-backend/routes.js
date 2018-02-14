@@ -27,20 +27,6 @@ routes.get('/polls', (req, res) =>
 
 routes.post('/authorized/polls', (req, res) => {
   const poll = req.body.poll;
-  const optionsArray = Object.keys(poll.options);
-
-  if (!poll) {
-    return res.status(400).json({error: 'No poll provided'});
-  }
-  if (!poll.options || poll.options.length < 2 || optionsArray.some(option => !option)) {
-    return res.status(400).json({error: 'Minimum 2 options required'});
-  }
-  if (!poll.title) {
-    return res.status(400).json({error: 'Poll title required'});
-  }
-  const new_options = {};
-  Object.keys(poll.options).forEach(name => new_options[name] = 0);
-  poll.options = new_options;
 
   poll.creator = req.user.email;
   poll.id = uuid();
