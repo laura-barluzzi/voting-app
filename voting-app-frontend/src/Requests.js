@@ -7,10 +7,13 @@ export const requestAllPolls = () => {
   });
 };
 
-export const requestUserPolls = (userEmail) => {
+export const requestUserPolls = (userEmail, token) => {
   return request({
-    uri: `${process.env.REACT_APP_SERVER_HOST}/api/polls/${userEmail}`,
-    json: true
+    uri: `${process.env.REACT_APP_SERVER_HOST}/api/authorized/polls/${userEmail}`,
+    json: true,
+    headers: {
+      'Authorization': `Bearer ${token}`
+    },
   });
 };
 

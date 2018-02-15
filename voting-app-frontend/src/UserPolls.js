@@ -16,7 +16,7 @@ export default class UserPolls extends PureComponent {
     };
   }
 
-  loadUserPolls = () => requestUserPolls(this.props.email).then(response => {
+  loadUserPolls = () => requestUserPolls(this.props.email, this.props.token).then(response => {
       this.setState({ userPolls: response.polls, isLoaded: true });
     }).catch(error => {
       this.setState({ error, isLoaded: true });

@@ -15,7 +15,7 @@ routes.get('/polls', (req, res) =>
     .catch(error => res.status(500).json(error))
 );
 
-routes.get('/polls/:email', (req, res) =>
+routes.get('/authorized/polls/:email', (req, res) =>
   fetchUserPolls(req.params.email)
     .then(result => res.status(200).json(result))
     .catch(error => res.status(500).json(error))
