@@ -9,30 +9,30 @@ export const requestAllPolls = () => {
 
 export const requestUserPolls = (userEmail) => {
   return request({
-    uri: `${process.env.REACT_APP_SERVER_HOST}/api/${userEmail}/polls`,
+    uri: `${process.env.REACT_APP_SERVER_HOST}/api/polls/${userEmail}`,
     json: true
   });
 };
 
 export const requestOnePoll = (pollId, pollCreator) => {
   return request({
-    uri: `${process.env.REACT_APP_SERVER_HOST}/api/polls/${pollId}/${pollCreator}`,
+    uri: `${process.env.REACT_APP_SERVER_HOST}/api/polls/${pollCreator}/${pollId}`,
     json: true
   });
 };
 
 export const requestUpdateVote = (poll, option) => {
   return  request({
-    uri: `${process.env.REACT_APP_SERVER_HOST}/api/vote/${poll.creator}/${poll.id}/${option}`,
+    uri: `${process.env.REACT_APP_SERVER_HOST}/api/polls/${poll.creator}/${poll.id}/vote`,
     json: true,
     method: 'POST',
-    body: {},
+    body: { option },
   });
 };
 
 export const requestNewPoll = (poll, token) => {
   return   request({
-    uri: `${process.env.REACT_APP_SERVER_HOST}/api/authorized/poll/create`,
+    uri: `${process.env.REACT_APP_SERVER_HOST}/api/authorized/polls`,
     json: true,
     method: 'POST',
     body: { poll },
@@ -44,7 +44,7 @@ export const requestNewPoll = (poll, token) => {
 
 export const requestUpdatePoll = (poll, token) => {
   return   request({
-    uri: `${process.env.REACT_APP_SERVER_HOST}/api/authorized/${poll.id}/${poll.creator}/poll/update`,
+    uri: `${process.env.REACT_APP_SERVER_HOST}/api/authorized/polls/${poll.creator}/${poll.id}/update`,
     json: true,
     method: 'PATCH',
     body: { poll },
@@ -56,7 +56,7 @@ export const requestUpdatePoll = (poll, token) => {
 
 export const requestDeletePoll = (pollId, email, token) => {
   return  request({
-    uri: `${process.env.REACT_APP_SERVER_HOST}/api/authorized/polls/${pollId}/${email}`,
+    uri: `${process.env.REACT_APP_SERVER_HOST}/api/authorized/polls/${email}/${pollId}`,
     json: true,
     method: 'DELETE',
     headers: {

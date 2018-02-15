@@ -113,7 +113,6 @@ export default class PollCreator extends Component {
                 {i >= 2 ? <button onClick={() => this.deleteOption(i)}>&times;</button> : null}
               </p>
             )}
-    
             <button onClick={this.addOption}>Add option</button>
     
             <button onClick={this.checkPollEntries}>Save</button>

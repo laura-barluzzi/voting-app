@@ -8,17 +8,6 @@ const {
 
 const routes = express.Router();
 
-routes.get('/polls/:id/:email', (req, res) =>
-  fetchPoll(req.params.email, req.params.id)
-    .then(result => res.status(200).json(result))
-    .catch(error => res.status(500).json(error))
-);
-
-routes.get('/:email/polls', (req, res) =>
-  fetchUserPolls(req.params.email)
-    .then(result => res.status(200).json(result))
-    .catch(error => res.status(500).json(error))
-);
 
 routes.get('/polls', (req, res) => 
   fetchAllPolls()
@@ -26,7 +15,25 @@ routes.get('/polls', (req, res) =>
     .catch(error => res.status(500).json(error))
 );
 
-routes.post('/authorized/poll/create', (req, res) => {
+routes.get('/polls/:email', (req, res) =>
+  fetchUserPolls(req.params.email)
+    .then(result => res.status(200).json(result))
+    .catch(error => res.status(500).json(error))
+);
+
+routes.get('/polls/:email/:id', (req, res) =>
+  fetchPoll(req.params.email, req.params.id)
+    .then(result => res.status(200).json(result))
+    .catch(error => res.status(500).json(error))
+);
+
+routes.post('/polls/:email/:id/vote', (req, res) =>
+  addVote(req.params.email, req.params.id, req.body.option)
+    .then(result => res.status(200).json(result))
+    .catch(error => res.status(500).json(error))
+);
+
+routes.post('/authorized/polls', (req, res) => {
   const poll = req.body.poll;
 
   poll.creator = req.user.email;
@@ -37,13 +44,7 @@ routes.post('/authorized/poll/create', (req, res) => {
     .catch((error) => res.status(500).json(error));
 });
 
-routes.post('/vote/:email/:id/:option', (req, res) =>
-  addVote(req.params.email, req.params.id, req.params.option)
-    .then(result => res.status(200).json(result))
-    .catch(error => res.status(500).json(error))
-);
-
-routes.patch('/authorized/:id/:email/poll/update', (req, res) => {
+routes.patch('/authorized/polls/:email/:id/:update', (req, res) => {
   const poll = req.body.poll;
 
   if (poll.id !== req.params.id) {
@@ -57,7 +58,7 @@ routes.patch('/authorized/:id/:email/poll/update', (req, res) => {
     .catch((error) => res.status(500).json(error));
 });
 
-routes.delete('/authorized/polls/:id/:email', (req, res) => {
+routes.delete('/authorized/polls/:email/:id', (req, res) => {
   const pollCreator = req.params.email;
 
   if (pollCreator !== req.user.email) { return res.status(403) }
