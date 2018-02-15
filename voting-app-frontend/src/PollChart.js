@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { XAxis, YAxis, BarChart, Bar } from 'recharts';
+import { Bar, BarChart, XAxis, YAxis } from 'recharts';
 
 
 export default class PollChart extends Component {

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
+import Button from './Button';
 
 export default class ListGenerator extends Component {
 
@@ -14,7 +15,7 @@ export default class ListGenerator extends Component {
             <Link to={{ pathname: `/poll/${id}/${polls[id].creator}`,
                         state: { poll: polls[id] } }}> {polls[id].title} </Link>
 
-            { deletePoll ? <button onClick={() => deletePoll(polls[id])}>&times;</button> : null }
+            { deletePoll ? <Button onClicked={() => deletePoll(polls[id])} text='&times;' /> : null }
           </p>
         )}
       </div>

@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import { requestOnePoll, requestUpdateVote } from './Requests';
 import { Link } from 'react-router-dom';
-import PollChart from './PollChart';
+
+import { requestOnePoll, requestUpdateVote } from './Requests';
+import Button from './Button';
 import Messages from './Messages';
+import PollChart from './PollChart';
 
 export default class PollViewer extends Component {
   constructor(props) {
@@ -45,7 +47,7 @@ export default class PollViewer extends Component {
         {Object.keys(poll.options).map((optionName, i) =>
           <p key={optionName}>
             {i}. {optionName} has {poll.options[optionName]} votes
-            <button onClick={() => this.addVote(optionName)}>vote</button>
+            <Button onClicked={() => this.addVote(optionName)} text='Vote' />
           </p>
         )}
         <PollChart poll={poll} onBarClicked={this.onBarClicked} />

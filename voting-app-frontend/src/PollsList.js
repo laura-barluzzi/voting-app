@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+
 import { requestAllPolls } from './Requests';
 import ListGenerator from './ListGenerator';
-import PageTitle from './PageTitle';
 import Messages from './Messages';
+import PageTitle from './PageTitle';
 
 export default class PollsList extends Component {
   constructor(props) {

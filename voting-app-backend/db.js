@@ -1,7 +1,7 @@
-const Promise = require('promise');
 const azure = require('azure-storage');
-const tableService = azure.createTableService();
 const entGen = azure.TableUtilities.entityGenerator;
+const Promise = require('promise');
+const tableService = azure.createTableService();
 
 
 const createOrUpdatePoll = (poll) => {

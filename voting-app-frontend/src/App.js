@@ -1,7 +1,7 @@
 import './App.css';
 
 import React, { Component } from 'react';
-import { UserAgentApplication, Logger } from 'msal';
+import { Logger, UserAgentApplication } from 'msal';
 import { Route, Switch } from 'react-router-dom';
 
 import Header from './Header';

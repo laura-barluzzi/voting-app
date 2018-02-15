@@ -1,13 +1,14 @@
 require('dotenv').config();
 
-const bodyParser = require('body-parser');
-const passport = require('passport');
 const AD = require('passport-azure-ad');
-const express = require('express');
+const bodyParser = require('body-parser');
 const cors = require('cors');
-const routes = require('./routes');
+const express = require('express');
+const passport = require('passport');
 
 const { createTable } = require('./db');
+const routes = require('./routes');
+
 const app = express();
 
 const AdClient = 'e5fb9cfa-5e1a-4f3a-8b07-1828c1b64ba5';

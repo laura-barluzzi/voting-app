@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { requestNewPoll, requestUpdatePoll } from './Requests';
 import { Link } from 'react-router-dom';
+
+import { requestNewPoll, requestUpdatePoll } from './Requests';
+import Button from './Button';
 import PageTitle from './PageTitle';
 import Messages from './Messages';
 
@@ -106,12 +108,12 @@ export default class PollCreator extends Component {
           <p key={option}>
             <label htmlFor={`option${option}`}>Option {i + 1}</label>
             <input type="text" ref={`option${option}`} name={`option${option}`} defaultValue={option}/>
-            {i >= 2 ? <button onClick={() => this.deleteOption(i)}>&times;</button> : null}
+            {i >= 2 ? <Button onClicked={() => this.deleteOption(i)} text='&times;' /> : null}
           </p>
         )}
-        <button onClick={this.addOption}>Add option</button>
 
-        <button onClick={this.checkPollEntries}>Save</button>
+        <Button onClicked={this.addOption} text='Add option' />
+        <Button onClicked={this.checkPollEntries} text='Save' />
 
       </div>
     );

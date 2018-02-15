@@ -1,5 +1,7 @@
 import React, { PureComponent } from 'react';
 
+import Button from './Button';
+
 export default class LoginButton extends PureComponent {
   render() {
     const { name, logout, login } = this.props;
@@ -8,15 +10,11 @@ export default class LoginButton extends PureComponent {
       return (
         <div>
           <div>Welcome {name}!</div>
-          <button onClick={logout}>Click to log out.</button>
+          <Button onClicked={logout} text='Log out' />
         </div>
-      )
-    } else {
-      return (
-        <div>
-          <button onClick={login}>Click to log in.</button>
-        </div>
-      )
+      );
     }
+
+    return <Button onClicked={login} text='Log in' />;
   }
 }
