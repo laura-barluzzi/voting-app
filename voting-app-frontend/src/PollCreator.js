@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { requestNewPoll, requestUpdatePoll } from './Requests';
 import { Link } from 'react-router-dom';
 import PageTitle from './PageTitle';
+import Messages from './Messages';
 
 export default class PollCreator extends Component {
   constructor(props) {
@@ -97,7 +98,7 @@ export default class PollCreator extends Component {
 
     return (
       <div>
-        { message ? message : null }
+        <Messages message={message}/>
         { error ? <p>{error.error.error}</p> : null }
 
         <PageTitle title={pageTitle}/>

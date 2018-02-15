@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { requestOnePoll, requestUpdateVote } from './Requests';
 import { Link } from 'react-router-dom';
 import PollChart from './PollChart';
+import Messages from './Messages';
 
 export default class PollViewer extends Component {
   constructor(props) {
@@ -32,7 +33,7 @@ export default class PollViewer extends Component {
     const { poll } = this.state;
 
     if (!poll) {
-      return null;
+      return <Messages message={'We couldn not find the poll :('} />;
     }
 
     return (

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { requestAllPolls } from './Requests';
 import ListGenerator from './ListGenerator';
 import PageTitle from './PageTitle';
+import Messages from './Messages';
 
 export default class PollsList extends Component {
   constructor(props) {
@@ -32,7 +33,7 @@ export default class PollsList extends Component {
     }
 
     if (!polls) {
-      return <p>No polls yet :(</p>;
+      return <Messages message={'There are not polls yet :('}/>;
     }
 
     return (

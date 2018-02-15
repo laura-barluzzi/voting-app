@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
-import { Link } from 'react-router-dom';
 
 import { requestDeletePoll, requestUserPolls } from './Requests';
 import ListGenerator from './ListGenerator';
 import PageTitle from './PageTitle';
+import Messages from './Messages';
 
 export default class UserPolls extends PureComponent {
   constructor(props) {
@@ -17,52 +17,37 @@ export default class UserPolls extends PureComponent {
     };
   }
 
-  loadUserPolls = () => requestUserPolls(this.props.email, this.props.token).then(response => {
-      this.setState({ userPolls: response.polls, isLoaded: true });
-    }).catch(error => {
-      this.setState({ error, isLoaded: true });
-    });
+  loadUserPolls = () => requestUserPolls(this.props.email, this.props.token)
+    .then(response => this.setState({ userPolls: response.polls, isLoaded: true }))
+    .catch(error => this.setState({ error, isLoaded: true })
+  );
 
-  deletePoll = (poll) => {
-    const { token } = this.props;
-    const { userPolls } = this.state;
-
-    requestDeletePoll(poll, token).then(response => {
+  deletePoll = (poll) => requestDeletePoll(poll, this.props.token)
+    .then(response => {
       if (response.deleted) {
-        const deletedPoll = userPolls[poll.id];
-        const newPolls = Object.assign({}, userPolls);
+        const newPolls = Object.assign({}, this.state.userPolls);
         delete newPolls[poll.id];
-        this.setState({ userPolls: newPolls, message: `Poll ${deletedPoll.title} deleted.` });
+        this.setState({ userPolls: newPolls, message: `Poll ${poll.title} deleted.` });
       }
-    }).catch(error => {
-      this.setState({ error });
-    });
-  }
+    })
+    .catch(error => this.setState({ error })
+  )
 
   componentDidMount() {
     this.loadUserPolls();
   }
- 
+
   render() {
     const { userPolls, isLoaded, message } = this.state;
 
-    if (!isLoaded) {
-      return null;
-    }
+    if (!isLoaded) return null;
 
-    if (!userPolls) {
-      return (
-        <div>
-          <p>You don't have any poll yet</p>
-          <Link to="/create">Create your first poll!</Link>
-        </div>
-      );
-    }
+    if (!userPolls) return <Messages message={'You do not have polls yet'} />;
 
     return (
       <div>
         <PageTitle title={'My polls'}/>
-        { message ? message : null }
+        <Messages message={message} />
         <ListGenerator polls={userPolls} deletePoll={this.deletePoll}/>
       </div>
     );
