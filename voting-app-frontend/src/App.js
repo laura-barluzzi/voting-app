@@ -41,8 +41,7 @@ export default class App extends Component {
     }
   )
   
-  adLogin = () => {
-    this.adApplication.loginPopup(AdScopes)
+  adLogin = () => this.adApplication.loginPopup(AdScopes)
     .then((idToken) => {
       this.adApplication.acquireTokenSilent(AdScopes)
       .then(this.adHandleToken)
@@ -53,24 +52,15 @@ export default class App extends Component {
       });
     })
     .catch(this.adHandleError);
-  }
-  
-  adLogout = () => {
-    this.adApplication.logout();
-  }
 
-  adHandleError = (error) => {
-    console.error(`AD: ${error}`);
-  }
+  adLogout = () => this.adApplication.logout()
 
-  adHandleToken = (token) => {
-    const user = this.adApplication.getUser();
+  adHandleError = (error) => console.error(`AD: ${error}`)
 
-    this.setState({
-      adUser: user,
-      adToken: token,
-    });
-  }
+  adHandleToken = (token) => this.setState({
+    adUser: this.adApplication.getUser(),
+    adToken: token,
+  });
 
   render() {
     const { adUser, adToken } = this.state;

@@ -19,8 +19,7 @@ export default class UserPolls extends PureComponent {
 
   loadUserPolls = () => requestUserPolls(this.props.email, this.props.token)
     .then(response => this.setState({ userPolls: response.polls, isLoaded: true }))
-    .catch(error => this.setState({ error, isLoaded: true })
-  );
+    .catch(error => this.setState({ error, isLoaded: true }))
 
   deletePoll = (poll) => requestDeletePoll(poll, this.props.token)
     .then(response => {
@@ -30,8 +29,7 @@ export default class UserPolls extends PureComponent {
         this.setState({ userPolls: newPolls, message: `Poll ${poll.title} deleted.` });
       }
     })
-    .catch(error => this.setState({ error })
-  )
+    .catch(error => this.setState({ error }))
 
   componentDidMount() {
     this.loadUserPolls();

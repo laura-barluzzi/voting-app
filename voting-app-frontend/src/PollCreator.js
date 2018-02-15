@@ -26,19 +26,14 @@ export default class PollCreator extends Component {
   }
 
   deleteOption = (i) => {
-    const { options } = this.state;
-    
-    const newOptions = options.slice();
+    const newOptions = this.state.options.slice();
     newOptions.splice(i, 1);
-    
     this.setState({ options: newOptions });
   }
 
   addOption = () => {
     const { options } = this.state;
-
     const newOption = `Option ${options.length + 1}`;
-    
     this.setState({ options: options.concat([newOption]) });
   }
 

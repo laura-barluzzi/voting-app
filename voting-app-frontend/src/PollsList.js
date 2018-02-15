@@ -15,15 +15,11 @@ export default class PollsList extends Component {
     };
   }
 
-  loadPolls = () => requestAllPolls().then(response => {
-      this.setState({ polls: response.polls, isLoaded: true });
-    }).catch(error => {
-      this.setState({ error, isLoaded: true });
-    });
+  loadPolls = () => requestAllPolls()
+    .then(response => this.setState({ polls: response.polls, isLoaded: true }))
+    .catch(error => this.setState({ error, isLoaded: true }))
 
-  componentDidMount() {
-    this.loadPolls();
-  }
+  componentDidMount() { this.loadPolls() }
 
   render() {
     const { polls, isLoaded } = this.state;
