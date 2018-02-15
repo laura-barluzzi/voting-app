@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { requestDeletePoll, requestUserPolls } from './Requests';
 import ListGenerator from './ListGenerator';
+import PageTitle from './PageTitle';
 
 export default class UserPolls extends PureComponent {
   constructor(props) {
@@ -60,7 +61,7 @@ export default class UserPolls extends PureComponent {
 
     return (
       <div>
-        <h3> My polls </h3>
+        <PageTitle title={'My polls'}/>
         { message ? message : null }
         <ListGenerator polls={userPolls} deletePoll={this.deletePoll}/>
       </div>

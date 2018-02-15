@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { requestAllPolls } from './Requests';
 import ListGenerator from './ListGenerator';
+import PageTitle from './PageTitle';
 
 export default class PollsList extends Component {
   constructor(props) {
@@ -34,6 +35,11 @@ export default class PollsList extends Component {
       return <p>No polls yet :(</p>;
     }
 
-    return <ListGenerator polls={polls} deletePoll={false}/>;
+    return (
+      <div>
+        <PageTitle title={'Vote for any of these polls!'} />
+        <ListGenerator polls={polls} deletePoll={false}/>
+      </div>
+    );
   }
 }
