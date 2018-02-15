@@ -1,7 +1,6 @@
 require('dotenv').config();
 
 const bodyParser = require('body-parser');
-const azure = require('azure-storage');
 const passport = require('passport');
 const AD = require('passport-azure-ad');
 const express = require('express');
@@ -37,4 +36,9 @@ app.use(bodyParser.json());
 
 app.use('/api', routes);
 
-createTable(app);
+createTable()
+  .then(app.listen(process.env.PORT))
+  .catch(error => {
+    console.log(error);
+    process.exit(1);
+  });

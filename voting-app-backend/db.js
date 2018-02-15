@@ -106,14 +106,8 @@ const fetchAllPolls = () => {
 const createTable = (app) => {
   return new Promise((resolve, reject) => {
     tableService.createTableIfNotExists('polls', (error) => {
-      if (error) {
-        console.error(error);
-        process.exit(1);
-        reject();
-      } else {
-        app.listen(process.env.PORT);
-        resolve();
-      }
+      if (error) return reject(error);
+      resolve();
     });
   });
 
