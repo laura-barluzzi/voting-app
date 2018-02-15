@@ -16,7 +16,7 @@ export default class PollCreator extends Component {
       pollCreator: null,
       error: null,
       message: '',
-      editingPoll: false,
+      editingPoll: this.props.location.state && this.props.location.state.poll ? true : false,
       saved: false,
       options
     };
@@ -82,10 +82,6 @@ export default class PollCreator extends Component {
     }).catch(error => {
       this.setState({ error });
     });
-
-  componentDidMount() { 
-    if (this.props.location.state && this.props.location.state.poll) this.setState({ editingPoll: true });
-  }
 
   render() {
     const { error, pollId, options, pollCreator, message, saved } = this.state;

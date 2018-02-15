@@ -44,7 +44,7 @@ routes.post('/authorized/polls', (req, res) => {
     .catch((error) => res.status(500).json(error));
 });
 
-routes.patch('/authorized/polls/:email/:id/:update', (req, res) => {
+routes.patch('/authorized/polls/:email/:id', (req, res) => {
   const poll = req.body.poll;
 
   if (poll.id !== req.params.id) {
