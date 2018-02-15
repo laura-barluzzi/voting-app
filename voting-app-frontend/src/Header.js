@@ -1,27 +1,25 @@
 import React, { PureComponent } from 'react';
 import { Link } from 'react-router-dom';
 
-import LoginButton from './LoginButton';
+import Button from './Button';
+import PageTitle from './PageTitle';
+import UserActions from './UserActions';
 
-export default class Main extends PureComponent {
-
-  userActionLinks = (userEmail) => {
-    const html =  <div><p><Link to="/create">Create poll</Link></p>
-                  <p><Link to={`/polls/${userEmail}`}>My polls</Link></p></div>;
-    return (userEmail) ? html : null;
-  };
+export default class Header extends PureComponent {
 
   render() {
     const { name, login, logout, email} = this.props;
+    const isUserLoggedIn = name && email ? true : false;
+    const title = isUserLoggedIn ? `Welcome ${name}!` : 'Join and create polls!';
 
     return (
       <div>
-        <h3>Share you opinion and vote!</h3>
-        <LoginButton name={name} login={login} logout={logout} />
-        { this.userActionLinks(email) }
-        <p><Link to="/">Home</Link></p>
+        <PageTitle title={title} />
+        <UserActions name={name} email={email} logout={logout} login={login}/>
+        <Link to="/"><Button text='Home' /></Link>
         <hr/>
       </div>
+
     );
   }
 }
