@@ -37,7 +37,7 @@ export default class PollsList extends Component {
 
     return (
       <div>
-        <PageTitle title={'Vote for any of these polls!'} />
+        <PageTitle title={'Vote in any of these polls!'} />
         <ListGenerator polls={polls} deletePoll={false}/>
       </div>
     );

@@ -87,36 +87,36 @@ export default class PollCreator extends Component {
   render() {
     const { error, pollId, options, pollCreator, message, editingPoll, saved } = this.state;
     const { location } = this.props;
-    const pageTitle = editingPoll ? 'Editing your poll' : 'Create a new poll';
 
+    const pageTitle = editingPoll ? 'Editing your poll' : 'Creating a new poll';
     const title = location && location.state ? location.state.poll.title : '';
+    
+    if (saved && pollId) {
+      return <Link to={`/poll/${pollId}/${pollCreator}`}>See your poll.</Link>;
+    }
 
     return (
       <div>
-        <PageTitle title={pageTitle}/>
         { message ? message : null }
         { error ? <p>{error.error.error}</p> : null }
-        { pollId ? <p><Link to={`/poll/${pollId}/${pollCreator}`}>See your poll.</Link></p> : null }
 
-        { saved ? null : 
-          <div>
-            <p>
-              <label htmlFor="title">Title</label>
-              <input type="text" ref="title" name="title" defaultValue={title} />
-            </p>
-    
-            {options.map((option, i) =>
-              <p key={option}>
-                <label htmlFor={`option${option}`}>Option {i + 1}</label>
-                <input type="text" ref={`option${option}`} name={`option${option}`} defaultValue={option}/>
-                {i >= 2 ? <button onClick={() => this.deleteOption(i)}>&times;</button> : null}
-              </p>
-            )}
-            <button onClick={this.addOption}>Add option</button>
-    
-            <button onClick={this.checkPollEntries}>Save</button>
-          </div>
-        }
+        <PageTitle title={pageTitle}/>
+        <p>
+          <label htmlFor="title">Title</label>
+          <input type="text" ref="title" name="title" defaultValue={title} />
+        </p>
+
+        {options.map((option, i) =>
+          <p key={option}>
+            <label htmlFor={`option${option}`}>Option {i + 1}</label>
+            <input type="text" ref={`option${option}`} name={`option${option}`} defaultValue={option}/>
+            {i >= 2 ? <button onClick={() => this.deleteOption(i)}>&times;</button> : null}
+          </p>
+        )}
+        <button onClick={this.addOption}>Add option</button>
+
+        <button onClick={this.checkPollEntries}>Save</button>
+
       </div>
     );
   }

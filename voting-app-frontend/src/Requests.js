@@ -47,7 +47,7 @@ export const requestNewPoll = (poll, token) => {
 
 export const requestUpdatePoll = (poll, token) => {
   return   request({
-    uri: `${process.env.REACT_APP_SERVER_HOST}/api/authorized/polls/${poll.creator}/${poll.id}/update`,
+    uri: `${process.env.REACT_APP_SERVER_HOST}/api/authorized/polls/${poll.creator}/${poll.id}`,
     json: true,
     method: 'PATCH',
     body: { poll },
