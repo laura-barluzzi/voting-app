@@ -38,7 +38,7 @@ export default class PollsList extends Component {
       <div>
         {Object.keys(polls).map((pollId) =>
           <p key={pollId}>
-            <Link to={`/poll/${pollId}/${polls[pollId].creator}`}>{polls[pollId].title}</Link>
+            <Link to={{ pathname: `/poll/${pollId}/${polls[pollId].creator}`, state: { poll: polls[pollId] } }}>{polls[pollId].title}</Link>
           </p>
         )}
       </div>

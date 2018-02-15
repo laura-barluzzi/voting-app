@@ -6,9 +6,10 @@ import PollChart from './PollChart';
 export default class PollViewer extends Component {
   constructor(props) {
     super(props);
+    const { location } = this.props;
 
     this.state = {
-      poll: null,
+      poll: location.state ? location.state.poll : null,
       error: null,
     };
   }
