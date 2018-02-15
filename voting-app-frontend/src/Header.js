@@ -13,7 +13,7 @@ export default class Header extends PureComponent {
     const title = isUserLoggedIn ? `Welcome ${name}!` : 'Join and create polls!';
 
     return (
-      <div>
+      <div className="hands-bg">
         <PageTitle title={title} />
         <UserActions name={name} email={email} logout={logout} login={login}/>
         <Link to="/"><Button text='Home' /></Link>
