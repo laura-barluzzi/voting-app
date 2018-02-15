@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { requestAllPolls } from './Requests';
-import { Link } from 'react-router-dom';
+import ListGenerator from './ListGenerator';
 
 export default class PollsList extends Component {
   constructor(props) {
@@ -34,14 +34,6 @@ export default class PollsList extends Component {
       return <p>No polls yet :(</p>;
     }
 
-    return (
-      <div>
-        {Object.keys(polls).map((pollId) =>
-          <p key={pollId}>
-            <Link to={{ pathname: `/poll/${pollId}/${polls[pollId].creator}`, state: { poll: polls[pollId] } }}>{polls[pollId].title}</Link>
-          </p>
-        )}
-      </div>
-    );
+    return <ListGenerator polls={polls} deletePoll={false}/>;
   }
 }

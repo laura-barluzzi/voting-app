@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { Link } from 'react-router-dom';
 
 import { requestDeletePoll, requestUserPolls } from './Requests';
-
+import ListGenerator from './ListGenerator';
 
 export default class UserPolls extends PureComponent {
   constructor(props) {
@@ -62,12 +62,7 @@ export default class UserPolls extends PureComponent {
       <div>
         <h3> My polls </h3>
         { message ? message : null }
-        {Object.keys(userPolls).map((pollId) =>
-          <p key={pollId}>
-            <Link to={{ pathname: `/poll/${pollId}/${userPolls[pollId].creator}`, state: { poll: userPolls[pollId] } }}>{userPolls[pollId].title}</Link>
-            <button onClick={() => this.deletePoll(userPolls[pollId])}>&times;</button>
-          </p>
-        )}
+        <ListGenerator polls={userPolls} deletePoll={this.deletePoll}/>
       </div>
     );
   }
