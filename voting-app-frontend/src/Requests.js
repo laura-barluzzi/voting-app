@@ -54,9 +54,9 @@ export const requestUpdatePoll = (poll, token) => {
   });
 };
 
-export const requestDeletePoll = (pollId, email, token) => {
+export const requestDeletePoll = (poll, token) => {
   return  request({
-    uri: `${process.env.REACT_APP_SERVER_HOST}/api/authorized/polls/${email}/${pollId}`,
+    uri: `${process.env.REACT_APP_SERVER_HOST}/api/authorized/polls/${poll.creator}/${poll.id}`,
     json: true,
     method: 'DELETE',
     headers: {

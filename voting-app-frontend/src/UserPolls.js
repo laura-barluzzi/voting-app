@@ -22,15 +22,15 @@ export default class UserPolls extends PureComponent {
       this.setState({ error, isLoaded: true });
     });
 
-  deletePoll = (pollId) => {
-    const { token, email } = this.props;
+  deletePoll = (poll) => {
+    const { token } = this.props;
     const { userPolls } = this.state;
 
-    requestDeletePoll(pollId, email, token).then(response => {
+    requestDeletePoll(poll, token).then(response => {
       if (response.deleted) {
-        const deletedPoll = userPolls[pollId];
+        const deletedPoll = userPolls[poll.id];
         const newPolls = Object.assign({}, userPolls);
-        delete newPolls[pollId];
+        delete newPolls[poll.id];
         this.setState({ userPolls: newPolls, message: `Poll ${deletedPoll.title} deleted.` });
       }
     }).catch(error => {
@@ -65,7 +65,7 @@ export default class UserPolls extends PureComponent {
         {Object.keys(userPolls).map((pollId) =>
           <p key={pollId}>
             <Link to={`/poll/${pollId}/${userPolls[pollId].creator}`}>{userPolls[pollId].title}</Link>
-            <button onClick={() => this.deletePoll(pollId)}>&times;</button>
+            <button onClick={() => this.deletePoll(userPolls[pollId])}>&times;</button>
           </p>
         )}
       </div>
