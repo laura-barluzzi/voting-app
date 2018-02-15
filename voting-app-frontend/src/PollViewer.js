@@ -25,8 +25,6 @@ export default class PollViewer extends Component {
     .then(response => this.setState({ poll: response, error: null }))
     .catch(error => this.setState({ error }));
 
-  onBarClicked = (data) => this.addVote(data.name);
-
   componentDidMount() { this.loadPoll(this.props.match.params.id, this.props.match.params.email) }
 
   render() {
@@ -50,7 +48,7 @@ export default class PollViewer extends Component {
             <Button onClicked={() => this.addVote(optionName)} text='Vote' />
           </p>
         )}
-        <PollChart poll={poll} onBarClicked={this.onBarClicked} />
+        <PollChart poll={poll} />
 
       </div>
     );
