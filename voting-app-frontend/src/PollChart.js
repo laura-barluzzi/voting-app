@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { Bar, BarChart, Legend, XAxis, YAxis } from 'recharts';
+import { Bar, BarChart, Legend, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 
 const getTotalOfVotes = (pollVotes, tot=0) => {
   pollVotes.forEach((vote) => tot += vote);
   return tot;
 };
-
 
 class CustomizedLabel extends Component {
   render () {
@@ -30,17 +29,26 @@ export default class PollChart extends Component {
         name: name,
         percent: Math.round((options[name] / tot) * 100)
       }));
-    return data;
+    return (tot) ? data: null;
   }
 
   render() {
+    const data = this.getData(this.props.poll.options);
+
+    if (!data) return null;
+
     return (
-      <BarChart width={600} height={300} data={this.getData(this.props.poll.options)}>
-        <XAxis dataKey="name"/>
-        <YAxis/>
-        <Legend />
-        <Bar dataKey="percent" fill="#82ca9d" label={<CustomizedLabel />} />
-      </BarChart>
+      <div style={{width: "90%"}}>
+        <ResponsiveContainer minWidth={300} height={300} >
+          <BarChart data={data}
+                    margin={{ top: 20, right: 10, left: 10, bottom: 0 }}>
+            <XAxis dataKey="name"/>
+            <YAxis/>
+            <Legend />
+            <Bar dataKey="percent" fill="#82ca9d" label={<CustomizedLabel />} />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
     );
   }
 }
