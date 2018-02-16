@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
 import { requestOnePoll, requestUpdateVote } from './Requests';
-import Button from './Button';
 import Messages from './Messages';
 import PollChart from './PollChart';
+import PollFormVote from './PollFormVote';
 
 export default class PollViewer extends Component {
   constructor(props) {
@@ -42,17 +42,8 @@ export default class PollViewer extends Component {
         { this.props.email !== poll.creator ? null : 
           <Link to={{ pathname: `/edit/${poll.id}`, state: { poll } }}>Edit</Link> }
 
-        <p>Title: {poll.title}</p>
-        <p>Creator: {poll.creator}</p>
-
-        {Object.keys(poll.options).map((optionName, i) =>
-          <p key={optionName}>
-            {i}. {optionName} has {poll.options[optionName]} votes
-            <Button onClicked={() => this.addVote(optionName)} text='Vote' />
-          </p>
-        )}
+        <PollFormVote poll={poll} addVote={this.addVote} />
         <PollChart poll={poll} />
-
       </div>
     );
   }
