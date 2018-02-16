@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 
 import { requestNewPoll, requestUpdatePoll } from './Requests';
 import Button from './Button';
-import PageTitle from './PageTitle';
 import Messages from './Messages';
+import PageTitle from './PageTitle';
+import SuccessView from './SuccessView';
 
 export default class PollCreator extends Component {
   constructor(props) {
@@ -89,9 +89,7 @@ export default class PollCreator extends Component {
     const pageTitle = editingPoll ? 'Editing your poll' : 'Creating a new poll';
     const title = location && location.state ? location.state.poll.title : '';
     
-    if (saved && pollId) {
-      return <Link to={`/poll/${pollId}/${pollCreator}`}>See your poll.</Link>;
-    }
+    if (saved && pollId) return <SuccessView id={pollId} creator={pollCreator} />;
 
     return (
       <div>
