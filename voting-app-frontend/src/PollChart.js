@@ -1,19 +1,26 @@
 import React, { Component } from 'react';
 import { Bar, BarChart, Legend, XAxis, YAxis } from 'recharts';
 
+const getTotalOfVotes = (pollVotes, tot=0) => {
+  pollVotes.forEach((vote) => tot += vote);
+  return tot;
+};
+
 export default class PollChart extends Component {
 
-  generateData = () => {
-    const options = this.props.poll.options;
-    const data = [];
+  getData = (options, data=[]) => {
+    const tot = getTotalOfVotes(Object.values(options));
     Object.keys(options).forEach((name) =>
-      data.push({name: name, percent: options[name]}));
+      data.push({ 
+        name: name,
+        percent: Math.round((options[name] / tot) * 100)
+      }));
     return data;
   }
 
   render() {
     return (
-      <BarChart className="white-bg" width={600} height={300} fill="white" data={this.generateData()}>
+      <BarChart width={600} height={300} data={this.getData(this.props.poll.options)}>
         <XAxis dataKey="name"/>
         <YAxis/>
         <Legend />
