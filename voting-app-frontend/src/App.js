@@ -1,7 +1,7 @@
 import './App.css';
 
 import React, { Component } from 'react';
-import { Logger, UserAgentApplication } from 'msal';
+import { UserAgentApplication } from 'msal';
 import { Route, Switch } from 'react-router-dom';
 
 import Header from './Header';
@@ -33,14 +33,9 @@ export default class App extends Component {
         this.adHandleError(error);
       }
     },
-    {
-      cacheLocation: 'localStorage',
-      logger: new Logger((level, message) => {
-        console.log(message);
-      })
-    }
+    { cacheLocation: 'localStorage' }
   )
-  
+
   adLogin = () => this.adApplication.loginPopup(AdScopes)
     .then((idToken) => {
       this.adApplication.acquireTokenSilent(AdScopes)
@@ -55,7 +50,7 @@ export default class App extends Component {
 
   adLogout = () => this.adApplication.logout()
 
-  adHandleError = (error) => console.error(`AD: ${error}`)
+  adHandleError = (error) => {}
 
   adHandleToken = (token) => this.setState({
     adUser: this.adApplication.getUser(),
@@ -65,7 +60,7 @@ export default class App extends Component {
   render() {
     const { adUser, adToken } = this.state;
     const email = adUser != null ? adUser.displayableId : null;
-    console.log(adToken);
+
     return (
       <div>
         <Header

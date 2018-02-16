@@ -1,11 +1,10 @@
 import React, { PureComponent } from 'react';
 
+const doNothing = () => {};
+
 export default class Button extends PureComponent {
   render() {
     const { onClicked, text } = this.props;
-
-    if (!onClicked) return <button> {text} </button>;
-
-    return <button onClick={onClicked}> {text} </button>;
+    return <button onClick={onClicked || doNothing}> {text} </button>;
     }
 }
