@@ -14,12 +14,13 @@ export default class PollViewer extends Component {
     this.state = {
       poll: location.state ? location.state.poll : null,
       error: null,
+      isLoaded: false,
     };
   }
 
   loadPoll = (pollId, pollCreator) => requestOnePoll(pollId, pollCreator)
-    .then(response => this.setState({ poll: response }))
-    .catch(error => this.setState({ error }));
+    .then(response => this.setState({ poll: response, isLoaded: true }))
+    .catch(error => this.setState({ error, isLoaded: true }));
 
   addVote = (optionName) => requestUpdateVote(this.state.poll, optionName)
     .then(response => this.setState({ poll: response, error: null }))
@@ -28,10 +29,12 @@ export default class PollViewer extends Component {
   componentDidMount() { this.loadPoll(this.props.match.params.id, this.props.match.params.email) }
 
   render() {
-    const { poll } = this.state;
+    const { poll, isLoaded } = this.state;
 
+    if (!isLoaded) return null;
+  
     if (!poll) {
-      return <Messages message={'We couldn not find the poll :('} />;
+      return <Messages message='We could not find the poll :(' />;
     }
 
     return (
