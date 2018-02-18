@@ -8,3 +8,9 @@ html {
   display: flex;
   justify-content: center;
 }
+
+.vertically-centered {
+  display: flex;
+  align-items: center;
+  align-content: center;
+}

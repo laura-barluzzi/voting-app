@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-const Alert = require('react-bootstrap').Alert;
+import Alert from 'react-bootstrap/lib/Alert';
 
 export default class Messages extends Component {
 

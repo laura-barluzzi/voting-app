@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 
-const BsButton = require('react-bootstrap').Button;
+import BsButton from 'react-bootstrap/lib/Button';
 const doNothing = () => {};
 
 export default class Button extends PureComponent {
