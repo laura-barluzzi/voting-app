@@ -3,6 +3,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Link } from 'react-router-dom';
 
 import Button from './Button';
+import Messages from './Messages';
 import PageTitle from './PageTitle';
 
 const host = window.location.origin + '/#';
@@ -17,10 +18,12 @@ export default class SuccessView extends PureComponent {
   onCopy = () =>  this.setState({copied: true})
 
   render() {
-    const { id, creator } = this.props;
+    const { id, creator, message } = this.props;
+    console.log(message);
     const pollUrl = `/poll/${id}/${creator}`;
     return (
       <div>
+        <Messages message={message} alertStyle={"success"} />
         <PageTitle text="Poll successfully saved :)" />
         <Link to={pollUrl}>See your poll.</Link>
         <p>or</p>

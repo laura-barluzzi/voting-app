@@ -1,12 +1,10 @@
 html {
   font-family: 'Open Sans', sans-serif;
   text-align: center;
+  padding: 20px 10px;
 }
 
-.white-bg {
-  background-color: rgb(255,255,255);
-}
-
-.red-bg {
-  background-color: red;
+.centered {
+  display: flex;
+  justify-content: center;
 }

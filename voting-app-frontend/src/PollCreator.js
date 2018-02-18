@@ -6,6 +6,8 @@ import Messages from './Messages';
 import PageTitle from './PageTitle';
 import SuccessView from './SuccessView';
 
+const ButtonToolbar = require('react-bootstrap').ButtonToolbar;
+
 export default class PollCreator extends Component {
   constructor(props) {
     super(props);
@@ -57,28 +59,29 @@ export default class PollCreator extends Component {
     return  editingPoll ? this.saveChangedPoll(newPoll) : this.saveNewPoll(newPoll);
   }
 
-  saveNewPoll = (newPoll) =>
-    requestNewPoll(newPoll, this.props.token).then(response => {
+  saveNewPoll = (newPoll) => requestNewPoll(newPoll, this.props.token)
+    .then(response => {
       this.setState({ 
         pollId: response.id,
         pollCreator: response.creator,
-        message: '',
+        message: `Successfully created new poll titled: ${response.title}`,
         saved: true,
-        error: null });
-    }).catch(error => {
+        error: null });})
+    .catch(error => {
       this.setState({ error });
     });
 
-  saveChangedPoll = (newPoll) =>
-    requestUpdatePoll(newPoll, this.props.token).then(response => {
+  saveChangedPoll = (newPoll) => requestUpdatePoll(newPoll, this.props.token)
+    .then(response => {
       this.setState({ 
         pollId: response.id,
         pollCreator: response.creator,
-        message: '',
+        message: `Successfully edited poll with title: ${response.title}`,
         editingPoll: false,
         saved: true,
         error: null });
-    }).catch(error => {
+    })
+    .catch(error => {
       this.setState({ error });
     });
 
@@ -89,11 +92,11 @@ export default class PollCreator extends Component {
     const pageTitle = editingPoll ? 'Editing your poll' : 'Creating a new poll';
     const title = location && location.state ? location.state.poll.title : '';
     
-    if (saved && pollId) return <SuccessView id={pollId} creator={pollCreator} />;
+    if (saved && pollId) return <SuccessView id={pollId} creator={pollCreator} message={message} />;
 
     return (
       <div>
-        <Messages message={message}/>
+        <Messages message={message} alertStyle={"danger"} />
         { error ? <p>{error.error.error}</p> : null }
 
         <PageTitle title={pageTitle}/>
@@ -109,10 +112,10 @@ export default class PollCreator extends Component {
             {i >= 2 ? <Button onClicked={() => this.deleteOption(i)} text='&times;' /> : null}
           </p>
         )}
-
-        <Button onClicked={this.addOption} text='Add option' />
-        <Button onClicked={this.checkPollEntries} text='Save' />
-
+        <ButtonToolbar className="centered">
+          <Button onClicked={this.addOption} text='Add option' />
+          <Button onClicked={this.checkPollEntries} text='Save' />
+        </ButtonToolbar>
       </div>
     );
   }

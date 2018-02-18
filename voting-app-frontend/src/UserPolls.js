@@ -40,12 +40,12 @@ export default class UserPolls extends PureComponent {
 
     if (!isLoaded) return null;
 
-    if (!userPolls) return <Messages message={'You do not have polls yet'} />;
+    if (!userPolls) return <Messages message={'You do not have polls yet'}  alertStyle={"warning"} />;
 
     return (
       <div>
         <PageTitle title={'My polls'}/>
-        <Messages message={message} />
+        <Messages message={message} alertStyle={"success"} />
         <ListGenerator polls={userPolls} deletePoll={this.deletePoll}/>
       </div>
     );

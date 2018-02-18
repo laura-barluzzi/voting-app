@@ -30,7 +30,7 @@ export default class PollsList extends Component {
     }
 
     if (!polls) {
-      return <Messages message={'There are not polls yet :('}/>;
+      return <Messages message={'There are not polls yet :('} alertStyle={"info"} />;
     }
 
     return (

@@ -34,7 +34,7 @@ export default class PollViewer extends Component {
     if (!isLoaded) return null;
   
     if (!poll) {
-      return <Messages message='We could not find the poll :(' />;
+      return <Messages message='We could not find the poll :(' alertStyle={"info"}  />;
     }
 
     return (
