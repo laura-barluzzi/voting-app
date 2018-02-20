@@ -14,3 +14,11 @@ html {
   align-items: center;
   align-content: center;
 }
+
+.navbar-default .navbar-nav>.active>a,
+.navbar-default .navbar-nav>.active>a:focus,
+.navbar-default .navbar-nav>.active>a:hover {
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+}

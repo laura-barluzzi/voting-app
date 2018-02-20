@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Link } from 'react-router-dom';
+import { LinkContainer } from 'react-router-bootstrap';
 import Navbar from 'react-bootstrap/lib/Navbar';
 import Nav from 'react-bootstrap/lib/Nav';
 import NavItem from 'react-bootstrap/lib/NavItem';
@@ -23,9 +23,11 @@ export default class Header extends PureComponent {
           </Navbar.Brand>
         </Navbar.Header>
         <Nav>
-          <NavItem href="#">
-            <Link to="/"><Button text='Home' /></Link>
-          </NavItem>
+          <LinkContainer to="/">
+            <NavItem eventKey={1}>
+              <Button text='Home' />
+            </NavItem>
+          </LinkContainer>
         </Nav>
         <UserActions name={name} email={email} logout={logout} login={login}/>
       </Navbar>
