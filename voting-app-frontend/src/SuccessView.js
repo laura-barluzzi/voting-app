@@ -19,7 +19,6 @@ export default class SuccessView extends PureComponent {
 
   render() {
     const { id, creator, message } = this.props;
-    console.log(message);
     const pollUrl = `/poll/${id}/${creator}`;
     return (
       <div>

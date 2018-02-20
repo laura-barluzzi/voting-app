@@ -5,7 +5,12 @@ const doNothing = () => {};
 
 export default class Button extends PureComponent {
   render() {
-    const { onClicked, text } = this.props;
-    return <BsButton onClick={onClicked || doNothing}> {text} </BsButton>;
+    const { onClicked, text, disabled } = this.props;
+
+    return <BsButton 
+              onClick={onClicked || doNothing}
+              disabled={disabled}>
+              {text}
+           </BsButton>;
     }
 }

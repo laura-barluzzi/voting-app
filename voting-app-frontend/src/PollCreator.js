@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 
 import { requestNewPoll, requestUpdatePoll } from './Requests';
-import Button from './Button';
+
 import Messages from './Messages';
 import PageTitle from './PageTitle';
 import SuccessView from './SuccessView';
-
-const ButtonToolbar = require('react-bootstrap').ButtonToolbar;
+import PollForm from './PollForm';
 
 export default class PollCreator extends Component {
   constructor(props) {
@@ -14,7 +13,7 @@ export default class PollCreator extends Component {
     
     const { location } = this.props;
 
-    const startOptions = ['Option 1', 'Option 2'];
+    const startOptions = ['', ''];
     const options =  location.state ? Object.keys(location.state.poll.options) : startOptions;
 
     this.state = {
@@ -26,35 +25,20 @@ export default class PollCreator extends Component {
       saved: false,
       options
     };
-
   }
 
-  deleteOption = (i) => {
-    const newOptions = this.state.options.slice();
-    newOptions.splice(i, 1);
-    this.setState({ options: newOptions });
-  }
-
-  addOption = () => {
-    const { options } = this.state;
-    const newOption = `Option ${options.length + 1}`;
-    this.setState({ options: options.concat([newOption]) });
-  }
-
-  checkPollEntries = () => {
-    const { options, editingPoll } = this.state;
+  onSubmitForm = (title, options) => {
+    const { editingPoll } = this.state;
     const { location } = this.props;
-    const pollTitle = this.refs.title.value;
-    const pollOptions = {};
-    options.forEach((option) => pollOptions[this.refs[`option${option}`].value] = 0);
 
-    if (Object.keys(pollOptions).length < 2 || pollOptions.hasOwnProperty(''))
+    const pollOptions = {};
+    options.forEach((option) => pollOptions[option] = 0);
+
+    if (Object.keys(pollOptions).length < 2)
       return this.setState({ message: 'Minimum 2 options required'});
 
-    if (!pollTitle) return this.setState({ message: 'Poll title required'});
-
     const newPoll = JSON.parse(JSON.stringify(location.state ? location.state.poll : {}));
-    newPoll.title = pollTitle;
+    newPoll.title = title;
     newPoll.options = pollOptions;
     return  editingPoll ? this.saveChangedPoll(newPoll) : this.saveNewPoll(newPoll);
   }
@@ -91,7 +75,7 @@ export default class PollCreator extends Component {
 
     const pageTitle = editingPoll ? 'Editing your poll' : 'Creating a new poll';
     const title = location && location.state ? location.state.poll.title : '';
-    
+
     if (saved && pollId) return <SuccessView id={pollId} creator={pollCreator} message={message} />;
 
     return (
@@ -100,22 +84,11 @@ export default class PollCreator extends Component {
         { error ? <p>{error.error.error}</p> : null }
 
         <PageTitle title={pageTitle}/>
-        <p>
-          <label htmlFor="title">Title</label>
-          <input type="text" ref="title" name="title" defaultValue={title} />
-        </p>
-
-        {options.map((option, i) =>
-          <p key={option}>
-            <label htmlFor={`option${option}`}>Option {i + 1}</label>
-            <input type="text" ref={`option${option}`} name={`option${option}`} defaultValue={option}/>
-            {i >= 2 ? <Button onClicked={() => this.deleteOption(i)} text='&times;' /> : null}
-          </p>
-        )}
-        <ButtonToolbar className="centered">
-          <Button onClicked={this.addOption} text='Add option' />
-          <Button onClicked={this.checkPollEntries} text='Save' />
-        </ButtonToolbar>
+        <PollForm
+          title={title}
+          options={options}
+          onSubmitForm={this.onSubmitForm}
+        />
       </div>
     );
   }
