@@ -13,17 +13,13 @@ export default class PollCreator extends Component {
     
     const { location } = this.props;
 
-    const startOptions = ['', ''];
-    const options =  location.state ? Object.keys(location.state.poll.options) : startOptions;
-
     this.state = {
-      pollId: null,
-      pollCreator: null,
-      error: null,
+      poll: null,
+      options: location.state ? Object.keys(location.state.poll.options) : ['', ''],
+      editingPoll: location.state && location.state.poll ? true : false,
       message: '',
-      editingPoll: this.props.location.state && this.props.location.state.poll ? true : false,
       saved: false,
-      options
+      error: null
     };
   }
 
@@ -34,7 +30,7 @@ export default class PollCreator extends Component {
     const pollOptions = {};
     options.forEach((option) => pollOptions[option] = 0);
 
-    if (Object.keys(pollOptions).length < 2)
+    if (options.length < 2)
       return this.setState({ message: 'Minimum 2 options required'});
 
     const newPoll = JSON.parse(JSON.stringify(location.state ? location.state.poll : {}));
@@ -46,8 +42,7 @@ export default class PollCreator extends Component {
   saveNewPoll = (newPoll) => requestNewPoll(newPoll, this.props.token)
     .then(response => {
       this.setState({ 
-        pollId: response.id,
-        pollCreator: response.creator,
+        poll: response,
         message: `Successfully created new poll titled: ${response.title}`,
         saved: true,
         error: null });})
@@ -58,8 +53,7 @@ export default class PollCreator extends Component {
   saveChangedPoll = (newPoll) => requestUpdatePoll(newPoll, this.props.token)
     .then(response => {
       this.setState({ 
-        pollId: response.id,
-        pollCreator: response.creator,
+        poll: response,
         message: `Successfully edited poll with title: ${response.title}`,
         editingPoll: false,
         saved: true,
@@ -70,13 +64,11 @@ export default class PollCreator extends Component {
     });
 
   render() {
-    const { error, pollId, options, pollCreator, message, editingPoll, saved } = this.state;
-    const { location } = this.props;
+    const { poll, message, editingPoll, saved, error } = this.state;
 
     const pageTitle = editingPoll ? 'Editing your poll' : 'Creating a new poll';
-    const title = location && location.state ? location.state.poll.title : '';
 
-    if (saved && pollId) return <SuccessView id={pollId} creator={pollCreator} message={message} />;
+    if (saved && poll.id) return <SuccessView id={poll.id} creator={poll.creator} message={message} />;
 
     return (
       <div>
@@ -85,8 +77,8 @@ export default class PollCreator extends Component {
 
         <PageTitle title={pageTitle}/>
         <PollForm
-          title={title}
-          options={options}
+          title={editingPoll ? this.props.location.state.poll.title : ''}
+          options={this.state.options}
           onSubmitForm={this.onSubmitForm}
         />
       </div>
