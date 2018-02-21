@@ -1,22 +1,29 @@
 import React, { PureComponent } from 'react';
+import Col from 'react-bootstrap/lib/Col';
+import ControlLabel from 'react-bootstrap/lib/ControlLabel';
+import Form from 'react-bootstrap/lib/Form';
+import FormGroup from 'react-bootstrap/lib/FormGroup';
+import FormControl from 'react-bootstrap/lib/FormControl';
 
 import Button from './Button';
-import PageTitle from './PageTitle';
 
 export default class PollFormVote extends PureComponent {
   render() {
-    const { poll, addVote } = this.props;
+    const { options, addVote } = this.props;
     return (
-      <div>
-        <PageTitle text={poll.title} />
-        <p><em>Created by {poll.creator}</em></p>
-         {Object.keys(poll.options).map((optionName, i) =>
-          <p key={optionName}>
-            {i}. {optionName}
-            <Button onClicked={() => addVote(optionName)} text='Vote' />
-          </p>
-         )}
-      </div>
+        <Form horizontal >
+        {Object.keys(options).map((option, i) =>
+          <FormGroup readOnly key={i} controlId={`option${option}`}>
+            <Col componentClass={ControlLabel} sm={2}>{ i+1 }</Col>
+            <Col sm={8}>
+              <FormControl type="text" value={option} readOnly />
+            </Col>
+            <Col sm={2}>
+              <Button onClicked={() => addVote(option)} text='Vote' />
+            </Col>
+          </FormGroup>
+        )}
+        </Form>
     );
   }
 }

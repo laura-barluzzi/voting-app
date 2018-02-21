@@ -8,10 +8,16 @@ export const getOptObjWithNoVotes = (optionsArray) => {
 
 export const namesArray = (optionsObj) => Object.keys(optionsObj);
 
-export const deleteOption = (optionsArray, indexToRemove) => {
+export const deleteOptionByIndex = (optionsArray, indexToRemove) => {
     const newOptions = optionsArray.slice();
     newOptions.splice(indexToRemove, 1);
     return newOptions;
+};
+
+export const deletePollById = (pollList, pollIdToRemove) => {
+  const newPolls = Object.assign({}, pollList);
+  delete newPolls[pollIdToRemove];
+  return newPolls;
 };
 
 export const changeOption = (optionsArray, indexToChange, newValue) => {
@@ -20,10 +26,9 @@ export const changeOption = (optionsArray, indexToChange, newValue) => {
   return newOptions;
 };
 
-export const areOptionsValid = (optionNamesArray, checkEachNameValidation) => {
-  const areOptionsValid = optionNamesArray.map(checkEachNameValidation);
-  return areOptionsValid.every(isValid => isValid);
-};
+export const validateOption = (value) => value.length > 0;
+
+export const validateTitle = (value) => value.length > 0;
 
 export const votesArray = (optionsObj) => Object.values(optionsObj);
 

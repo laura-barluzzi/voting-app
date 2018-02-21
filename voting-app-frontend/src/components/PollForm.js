@@ -6,6 +6,12 @@ import Form from 'react-bootstrap/lib/Form';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import FormControl from 'react-bootstrap/lib/FormControl';
 
+import {
+  changeOption,
+  deleteOptionByIndex,
+  validateTitle,
+  validateOption } from '../domain/domain';
+
 import Button from './Button';
 
 export default class PollForm extends Component {
@@ -19,30 +25,22 @@ export default class PollForm extends Component {
     };
   }
 
-  getValidationState = (value) =>
-    this.state.shouldValidate && value.length > 0;
-
   handleChangeTitle = (e) => this.setState({
     title: e.target.value,
     shouldValidate: true
   });
 
   handleChangeOption = (e, i) => {
-    const newOptions = this.state.options.slice();
-    newOptions[i] = e.target.value;
+    const newOptions = changeOption(this.state.options, i, e.target.value);
     this.setState({ options: newOptions, shouldValidate: true });
   };
 
   deleteOption = (i) => {
-    const newOptions = this.state.options.slice();
-    newOptions.splice(i, 1);
+    const newOptions = deleteOptionByIndex(this.state.options, i);
     this.setState({ options: newOptions });
   }
 
-  addOption = () => {
-    const { options } = this.state;
-    this.setState({ options: options.concat([""]) });
-  }
+  addOption = () => this.setState({ options: this.state.options.concat([""]) });
 
   submitForm = (event) => {
     event.preventDefault();
@@ -53,8 +51,8 @@ export default class PollForm extends Component {
   render() {
     const { title, options, shouldValidate } = this.state;
 
-    const isTitleValid = this.getValidationState(title);
-    const areOptionsValid = options.map(this.getValidationState);
+    const isTitleValid = validateTitle(title);
+    const areOptionsValid = options.map(validateOption);
     const canSubmitForm = isTitleValid && areOptionsValid.every(isValid => isValid);
 
     return (

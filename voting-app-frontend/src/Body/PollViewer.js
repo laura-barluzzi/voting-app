@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { requestOnePoll, requestUpdateVote } from '../backend/Requests';
 
 import Messages from '../components/Messages';
+import PageTitle from '../components/PageTitle';
 import PollChart from '../components/PollChart';
 import PollFormVote from '../components/PollFormVote';
 
@@ -42,8 +43,8 @@ export default class PollViewer extends Component {
       <div>
         { this.props.email !== poll.creator ? null : 
           <Link to={{ pathname: `/edit/${poll.id}`, state: { poll } }}>Edit</Link> }
-
-        <PollFormVote poll={poll} addVote={this.addVote} />
+        <PageTitle title={poll.title} subTitle={`Created by ${poll.creator}`} />
+        <PollFormVote options={poll.options} addVote={this.addVote} />
         <PollChart poll={poll} />
       </div>
     );

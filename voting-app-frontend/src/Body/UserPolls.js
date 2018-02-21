@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 
 import { requestDeletePoll, requestUserPolls } from '../backend/Requests';
+import { deletePollById } from '../domain/domain';
 
 import ListGenerator from '../components/ListGenerator';
 import PageTitle from '../components/PageTitle';
@@ -25,8 +26,7 @@ export default class UserPolls extends PureComponent {
   deletePoll = (poll) => requestDeletePoll(poll, this.props.token)
     .then(response => {
       if (response.deleted) {
-        const newPolls = Object.assign({}, this.state.userPolls);
-        delete newPolls[poll.id];
+        const newPolls =  deletePollById(this.state.userPolls, poll.id);
         this.setState({ userPolls: newPolls, message: `Poll ${poll.title} deleted.` });
       }
     })
@@ -45,8 +45,8 @@ export default class UserPolls extends PureComponent {
 
     return (
       <div>
-        <PageTitle title={'My polls'}/>
         <Messages message={message} alertStyle={"success"} />
+        <PageTitle title={'My polls'}/>
         <ListGenerator polls={userPolls} deletePoll={this.deletePoll}/>
       </div>
     );
