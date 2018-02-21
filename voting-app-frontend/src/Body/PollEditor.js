@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 
-import { requestUpdatePoll } from './Requests';
+import { requestUpdatePoll } from '../backend/Requests';
 
-import Messages from './Messages';
-import PageTitle from './PageTitle';
-import PollForm from './PollForm';
+import Messages from '../components/Messages';
+import PageTitle from '../components/PageTitle';
+import PollForm from '../components/PollForm';
 import SuccessView from './SuccessView';
 
 export default class PollCreator extends Component {

@@ -4,12 +4,12 @@ import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { UserAgentApplication } from 'msal';
 
-import Header from './Header';
-import PollCreator from './PollCreator';
-import PollEditor from './PollEditor';
-import PollViewer from './PollViewer';
-import PollsList from './PollsList';
-import UserPolls from './UserPolls';
+import Header from './Header/Header';
+import PollCreator from './Body/PollCreator';
+import PollEditor from './Body/PollEditor';
+import PollViewer from './Body/PollViewer';
+import PollsList from './Body/PollsList';
+import UserPolls from './Body/UserPolls';
 
 const AdClient = 'e5fb9cfa-5e1a-4f3a-8b07-1828c1b64ba5';
 const AdScopes = ['openid', 'profile'];

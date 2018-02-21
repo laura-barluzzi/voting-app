@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 
-import { requestAllPolls } from './Requests';
-import ListGenerator from './ListGenerator';
-import Messages from './Messages';
-import PageTitle from './PageTitle';
+import { requestAllPolls } from '../backend/Requests';
+
+import ListGenerator from '../components/ListGenerator';
+import Messages from '../components/Messages';
+import PageTitle from '../components/PageTitle';
 
 export default class PollsList extends Component {
   constructor(props) {

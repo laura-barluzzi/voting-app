@@ -1,10 +1,17 @@
 import React, { Component } from 'react';
-import { Bar, BarChart, Legend, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import {
+  Bar,
+  BarChart,
+  Legend,
+  ResponsiveContainer,
+  XAxis,
+  YAxis } from 'recharts';
 
-const getTotalOfVotes = (pollVotes, tot=0) => {
-  pollVotes.forEach((vote) => tot += vote);
-  return tot;
-};
+import {
+  namesArray,
+  percentOptionVote,
+  totalOfPollVotes,
+  votesArray } from '../domain/domain';
 
 class CustomizedLabel extends Component {
   render () {
@@ -23,11 +30,11 @@ class CustomizedLabel extends Component {
 export default class PollChart extends Component {
 
   getData = (options, data=[]) => {
-    const tot = getTotalOfVotes(Object.values(options));
-    Object.keys(options).forEach((name) =>
+    const tot = totalOfPollVotes(votesArray(options));
+    namesArray(options).forEach((name) =>
       data.push({ 
         name: name,
-        percent: Math.round((options[name] / tot) * 100)
+        percent: percentOptionVote(options[name], tot)
       }));
     return (tot) ? data: null;
   }

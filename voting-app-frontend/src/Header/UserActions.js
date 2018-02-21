@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
-
-import Button from './Button';
 import Nav from 'react-bootstrap/lib/Nav';
 import NavItem from 'react-bootstrap/lib/NavItem';
+
+import Button from '../components/Button';
 
 export default class UserActions extends PureComponent {
 

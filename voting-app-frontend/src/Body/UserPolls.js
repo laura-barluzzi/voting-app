@@ -1,9 +1,10 @@
 import React, { PureComponent } from 'react';
 
-import { requestDeletePoll, requestUserPolls } from './Requests';
-import ListGenerator from './ListGenerator';
-import PageTitle from './PageTitle';
-import Messages from './Messages';
+import { requestDeletePoll, requestUserPolls } from '../backend/Requests';
+
+import ListGenerator from '../components/ListGenerator';
+import PageTitle from '../components/PageTitle';
+import Messages from '../components/Messages';
 
 export default class UserPolls extends PureComponent {
   constructor(props) {

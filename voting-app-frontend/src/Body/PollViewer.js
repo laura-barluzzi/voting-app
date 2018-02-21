@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
-import { requestOnePoll, requestUpdateVote } from './Requests';
-import Messages from './Messages';
-import PollChart from './PollChart';
-import PollFormVote from './PollFormVote';
+import { requestOnePoll, requestUpdateVote } from '../backend/Requests';
+
+import Messages from '../components/Messages';
+import PollChart from '../components/PollChart';
+import PollFormVote from '../components/PollFormVote';
 
 export default class PollViewer extends Component {
   constructor(props) {

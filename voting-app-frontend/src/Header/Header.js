@@ -4,8 +4,8 @@ import Navbar from 'react-bootstrap/lib/Navbar';
 import Nav from 'react-bootstrap/lib/Nav';
 import NavItem from 'react-bootstrap/lib/NavItem';
 
-import Button from './Button';
-import PageTitle from './PageTitle';
+import Button from '../components/Button';
+import PageTitle from '../components/PageTitle';
 import UserActions from './UserActions';
 
 export default class Header extends PureComponent {

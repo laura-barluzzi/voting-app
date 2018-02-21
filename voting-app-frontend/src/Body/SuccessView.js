@@ -2,9 +2,9 @@ import React, { PureComponent } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Link } from 'react-router-dom';
 
-import Button from './Button';
-import Messages from './Messages';
-import PageTitle from './PageTitle';
+import Button from '../components/Button';
+import Messages from '../components/Messages';
+import PageTitle from '../components/PageTitle';
 
 const host = window.location.origin + '/#';
 
