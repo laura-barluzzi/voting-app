@@ -19,7 +19,7 @@ export default class PollFormVote extends PureComponent {
               <FormControl type="text" value={option} readOnly />
             </Col>
             <Col sm={2}>
-              <Button onClicked={() => addVote(option)} text='Vote' />
+              <Button onClicked={() => addVote(option)} textKey="vote" />
             </Col>
           </FormGroup>
         )}

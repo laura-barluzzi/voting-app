@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 
 import { requestNewPoll } from '../backend/Requests';
-import {
-  createdWrong,
-  pollCreatorTitle,
-  createdSuccessfully } from '../domain/messages';
+import { titlePages, success, failure } from '../domain/messages';
 
 import Messages from '../components/Messages';
 import PageTitle from '../components/PageTitle';
@@ -40,22 +37,28 @@ export default class PollCreator extends Component {
     .then(response => {
       this.setState({ 
         poll: response,
-        message: createdSuccessfully(response.title),
+        message: success.creating(response.title),
         saved: true,
         error: null });})
     .catch(error => {
-      this.setState({ error, message: createdWrong });
+      this.setState({ error, message: failure.creating });
     });
 
   render() {
-    const { poll, message, saved } = this.state;
+    const { poll, message, saved, error } = this.state;
+    const msgStyle = error ? "danger" : "success";
 
-    if (saved && poll) return <SuccessView id={poll.id} creator={poll.creator} message={message} />;
+    if (saved && poll) return <SuccessView
+        id={poll.id}
+        creator={poll.creator}
+        message={message}
+        alertStyle={msgStyle}
+      />;
 
     return (
       <div>
-        <Messages message={message} alertStyle={"danger"} />
-        <PageTitle title={pollCreatorTitle} />
+        <Messages message={message} alertStyle={msgStyle} />
+        <PageTitle title={titlePages.pollCreator} />
         <PollForm
           title=''
           options={['', '']}

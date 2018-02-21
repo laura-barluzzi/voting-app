@@ -8,7 +8,7 @@ export default class PageTitle extends Component {
     return(
       <div>
         <h3>{ title }</h3>
-        { !subTitle ? null: <p><em>{subTitle}</em></p> }
+        <p><em>{subTitle || null}</em></p> 
       </div>
     );
   }

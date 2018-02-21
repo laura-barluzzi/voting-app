@@ -5,7 +5,7 @@ import Alert from 'react-bootstrap/lib/Alert';
 export default class Messages extends Component {
 
   render() {
-    const { message, alertStyle} = this.props;
+    const { message, alertStyle } = this.props;
 
     if (!message) return null;
 

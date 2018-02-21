@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 
 import { requestAllPolls } from '../backend/Requests';
-import { 
-  allPollList,
-  noPublicPolls,
-  fetchingPollsWrong } from '../domain/messages';
+import { noPublicPolls, titlePages, failure } from '../domain/messages';
 
 import ListGenerator from '../components/ListGenerator';
 import Messages from '../components/Messages';
@@ -24,25 +21,22 @@ export default class PollsList extends Component {
 
   loadPolls = () => requestAllPolls()
     .then(response => this.setState({ polls: response.polls, isLoaded: true }))
-    .catch(error => this.setState({ error, isLoaded: true, message: fetchingPollsWrong}))
+    .catch(error => this.setState({ error, isLoaded: true, message: failure.fetchingPolls}))
 
   componentDidMount() { this.loadPolls() }
 
   render() {
-    const { polls, isLoaded, message } = this.state;
+    const { polls, isLoaded, message, error } = this.state;
+    const msgStyle = error ? 'danger' : 'success';
 
-    if (!isLoaded) {
-      return null;
-    }
+    if (!isLoaded) return null;
 
-    if (!polls) {
-      return <Messages message={noPublicPolls} alertStyle={"info"} />;
-    }
+    if (!polls) return <Messages message={noPublicPolls} alertStyle={'warning'} />;
 
     return (
       <div>
-        <Messages message={message} alertStyle={"danger"} />
-        <PageTitle title={allPollList} />
+        <Messages message={message} alertStyle={msgStyle} />
+        <PageTitle title={titlePages.pollsList} />
         <ListGenerator polls={polls} deletePoll={false}/>
       </div>
     );

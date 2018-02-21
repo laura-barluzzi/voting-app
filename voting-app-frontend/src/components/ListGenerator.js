@@ -15,7 +15,7 @@ export default class ListGenerator extends Component {
             <Link to={{ pathname: `/poll/${id}/${polls[id].creator}`,
                         state: { poll: polls[id] } }}> {polls[id].title} </Link>
 
-            { deletePoll ? <Button onClicked={() => deletePoll(polls[id])} text='&times;' /> : null }
+            { deletePoll ? <Button onClicked={() => deletePoll(polls[id])} textKey="remove" /> : null }
           </p>
         )}
       </div>

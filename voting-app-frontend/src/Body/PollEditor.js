@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
 
 import { requestUpdatePoll } from '../backend/Requests';
-import {
-  noPoll,
-  editedWrong,
-  editedSuccessfully,
-  pollEditorTitle } from '../domain/messages';
+import { noPoll, titlePages, success, failure } from '../domain/messages';
 
 import Messages from '../components/Messages';
 import PageTitle from '../components/PageTitle';
@@ -44,25 +40,31 @@ export default class PollCreator extends Component {
     .then(response => {
       this.setState({ 
         poll: response,
-        message: editedSuccessfully(response.title),
+        message: success.editing(response.title),
         saved: true,
         error: null });
     })
     .catch(error => {
-      this.setState({ error, message: editedWrong(this.state.poll.title) });
+      this.setState({ error, message: failure.editing(this.state.poll.title) });
     });
 
   render() {
-    const { poll, message, saved } = this.state;
-    
-    if (!poll) return <Messages message={noPoll} alertStyle={'danger'} />;
+    const { poll, message, saved, error } = this.state;
+    const msgStyle = error ? "danger" : "success";
 
-    if (saved && poll) return <SuccessView id={poll.id} creator={poll.creator} message={message} />;
+    if (!poll) return <Messages message={noPoll} alertStyle={'warning'} />;
+
+    if (saved && poll) return <SuccessView 
+        id={poll.id}
+        creator={poll.creator}
+        message={message}
+        alertStyle={msgStyle}
+      />;
 
     return (
       <div>
-        <Messages message={message} alertStyle={"danger"} />
-        <PageTitle title={pollEditorTitle} />
+        <Messages message={message} alertStyle={msgStyle} />
+        <PageTitle title={titlePages.editing} />
         <PollForm
           title={poll.title}
           options={Object.keys(poll.options)}

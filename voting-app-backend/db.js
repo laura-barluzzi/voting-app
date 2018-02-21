@@ -79,6 +79,8 @@ const fetchUserPolls = (userEmail) => {
         polls[poll.id] = poll;
       });
 
+      if (!Object.keys(polls).length) return resolve({ polls: null });
+
       return resolve({ polls });
     });
   });

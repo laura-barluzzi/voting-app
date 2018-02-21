@@ -91,17 +91,17 @@ export default class PollForm extends Component {
               />
             </Col>
             <Col sm={2}>
-              {i >= 2 ? <Button onClicked={() => this.deleteOption(i)} text='&times;' /> : null}
+              {i >= 2 ? <Button onClicked={() => this.deleteOption(i)} textKey="remove" /> : null}
             </Col>
           </FormGroup>
         )}
 
         <FormGroup>
           <Col sm={6}>
-            <Button onClicked={this.addOption} text='Add option' />
+            <Button onClicked={this.addOption} textKey="add" />
           </Col>
           <Col sm={6}>
-            <Button onClicked={this.submitForm} text='Save' disabled={!canSubmitForm} />
+            <Button onClicked={this.submitForm} textKey="save" disabled={!canSubmitForm} />
           </Col>
         </FormGroup>
       </Form>

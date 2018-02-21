@@ -1,27 +1,57 @@
-// Header messages
-export const welcomeLoggedOut = "Join and create personalized polls";
-export const welcomeUser = (name) => `Welcome ${name}`;
-
-// Page titles
-export const pollEditorTitle = "Editing poll";
-export const pollCreatorTitle = "Creating poll";
-export const allPollList = "Public polls";
-export const userPollList = "My polls";
-
 // No data found messages
 export const noPublicPolls = "There aren't polls yet :(";
 export const noMyPolls = "You haven't created any polls yet";
-export const noPoll = "We could not fetch this poll";
+export const noPoll = "This poll no longer exists";
+
+// Header messages
+export const header = {
+  loggedOut: "Join and create personalized polls",
+  loggedIn: (name) => `Welcome ${name}`
+};
+
+// Page titles
+export const titlePages = {
+  pollsList: "Public polls",
+  userPolls: "My polls",
+  pollCreator: "Creating poll",
+  pollEditor: "Editing poll"
+};
 
 // Successfull messages
-export const votedSuccessfully = "Thanks for voting :)";
-export const createdSuccessfully = (title) => `Successfully created poll titled: "${title}"`;
-export const editedSuccessfully = (title) => `Successfully edited poll titled: "${title}"`;
-export const deletedPollSuccessfully = (title) => `Successfully deleted poll titled: "${title}"`;
+export const success = {
+  voting: "Thanks for voting :)",
+  creating: (title) => `Successfully created poll titled: "${title}"`,
+  editing: (title) => `Successfully edited poll titled: "${title}"`,
+  saving: "The poll was successfully saved :)",
+  deleting: (title) => `Successfully deleted poll titled: "${title}"`
+};
 
-// Unsuccessfull messages
-export const votedWrong = "Something went wrong while saving your vote :(";
-export const createdWrong = `Something went wrong: we could not create the poll`;
-export const editedWrong = (title) => `Something went wrong: we could not edit poll titled: "${title}"`;
-export const deletedPollWrong = `Something went wrong: we could not delete the poll`;
-export const fetchingPollsWrong = "Something went wrong while fetching the polls";
+// Error messages
+export const failure = {
+  voting: "Error: Something went wrong while saving your vote, please try again",
+  creating: "Error: Something went wrong while creating the poll",
+  editing: (title) => `Error: Something went wrong while editing poll titled: "${title}"`,
+  deleting: "Error: Something went wrong while deleting poll",
+  fetchingPolls: "Error: Something went wrong while fetching the polls",
+  fetchingPoll: "Error: Something went wrong while fetching this poll"
+};
+
+// Button texts
+export const btn = {
+  save : "Save",
+  edit : "Edit",
+  add : "Add option",
+  remove: "\u00d7",
+  vote: "Vote",
+  create: "Create poll",
+  myPolls: "My polls",
+  login: "Login",
+  logout: "Logout",
+  home: "Home",
+  clipboard: "Copy to clipboard",
+  styles: {
+    red: "danger",
+    blu: "primary",
+    ligthBlu: "info"
+  }
+};
