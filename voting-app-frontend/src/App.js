@@ -1,11 +1,12 @@
 import './App.css';
 
 import React, { Component } from 'react';
-import { UserAgentApplication } from 'msal';
 import { Route, Switch } from 'react-router-dom';
+import { UserAgentApplication } from 'msal';
 
 import Header from './Header';
 import PollCreator from './PollCreator';
+import PollEditor from './PollEditor';
 import PollViewer from './PollViewer';
 import PollsList from './PollsList';
 import UserPolls from './UserPolls';
@@ -74,7 +75,7 @@ export default class App extends Component {
           <Route exact path="/" render={(props) => <PollsList {...props} token={adToken} />} />
           <Route path="/create" render={(props) => <PollCreator {...props} token={adToken} />} />
           <Route path="/poll/:id/:email" render={(props) => <PollViewer {...props} token={adToken} email={email}/>} />
-          <Route path="/edit/:id" render={(props) => <PollCreator {...props} token={adToken} email={email}/>} />
+          <Route path="/edit/:id" render={(props) => <PollEditor {...props} token={adToken} email={email}/>} />
           <Route path="/polls/:email" render={(props) => <UserPolls {...props} token={adToken} email={email} />} />
         </Switch>
       </div>
