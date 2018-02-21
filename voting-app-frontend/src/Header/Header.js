@@ -4,6 +4,7 @@ import Navbar from 'react-bootstrap/lib/Navbar';
 import Nav from 'react-bootstrap/lib/Nav';
 import NavItem from 'react-bootstrap/lib/NavItem';
 
+import { welcomeLoggedOut, welcomeUser } from '../domain/messages';
 import Button from '../components/Button';
 import PageTitle from '../components/PageTitle';
 import UserActions from './UserActions';
@@ -13,7 +14,7 @@ export default class Header extends PureComponent {
   render() {
     const { name, login, logout, email} = this.props;
     const isUserLoggedIn = name && email ? true : false;
-    const title = isUserLoggedIn ? `Welcome ${name}!` : 'Join and create polls!';
+    const title = isUserLoggedIn ? welcomeUser(name) : welcomeLoggedOut;
 
     return (
       <Navbar>

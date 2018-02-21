@@ -21,6 +21,7 @@ export const deletedPollSuccessfully = (title) => `Successfully deleted poll tit
 
 // Unsuccessfull messages
 export const votedWrong = "Something went wrong while saving your vote :(";
-export const createdWrong = (title) => `We could not create poll titled: "${title}"`;
-export const editedWrong = (title) => `We could not edit poll titled: "${title}"`;
-export const deletedPollWrong = (title) => `We could not delete poll titled: "${title}"`;
+export const createdWrong = `Something went wrong: we could not create the poll`;
+export const editedWrong = (title) => `Something went wrong: we could not edit poll titled: "${title}"`;
+export const deletedPollWrong = `Something went wrong: we could not delete the poll`;
+export const fetchingPollsWrong = "Something went wrong while fetching the polls";

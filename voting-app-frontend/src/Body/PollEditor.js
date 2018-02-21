@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 
 import { requestUpdatePoll } from '../backend/Requests';
+import {
+  noPoll,
+  editedWrong,
+  editedSuccessfully,
+  pollEditorTitle } from '../domain/messages';
 
 import Messages from '../components/Messages';
 import PageTitle from '../components/PageTitle';
@@ -39,27 +44,25 @@ export default class PollCreator extends Component {
     .then(response => {
       this.setState({ 
         poll: response,
-        message: `Successfully edited poll with title: ${response.title}`,
+        message: editedSuccessfully(response.title),
         saved: true,
         error: null });
     })
     .catch(error => {
-      this.setState({ error });
+      this.setState({ error, message: editedWrong(this.state.poll.title) });
     });
 
   render() {
-    const { poll, message, saved, error } = this.state;
+    const { poll, message, saved } = this.state;
     
-    if (!poll) return <Messages message='Poll was not found' alertStyle={'danger'} />;
+    if (!poll) return <Messages message={noPoll} alertStyle={'danger'} />;
 
     if (saved && poll) return <SuccessView id={poll.id} creator={poll.creator} message={message} />;
 
     return (
       <div>
         <Messages message={message} alertStyle={"danger"} />
-        { error ? <p>{error.error.error}</p> : null }
-
-        <PageTitle title='Editing your poll' />
+        <PageTitle title={pollEditorTitle} />
         <PollForm
           title={poll.title}
           options={Object.keys(poll.options)}

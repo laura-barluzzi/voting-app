@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 
 import { requestAllPolls } from '../backend/Requests';
+import { 
+  allPollList,
+  noPublicPolls,
+  fetchingPollsWrong } from '../domain/messages';
 
 import ListGenerator from '../components/ListGenerator';
 import Messages from '../components/Messages';
@@ -13,30 +17,32 @@ export default class PollsList extends Component {
     this.state = {
       polls: null,
       error: null,
+      message: '',
       isLoaded: false,
     };
   }
 
   loadPolls = () => requestAllPolls()
     .then(response => this.setState({ polls: response.polls, isLoaded: true }))
-    .catch(error => this.setState({ error, isLoaded: true }))
+    .catch(error => this.setState({ error, isLoaded: true, message: fetchingPollsWrong}))
 
   componentDidMount() { this.loadPolls() }
 
   render() {
-    const { polls, isLoaded } = this.state;
+    const { polls, isLoaded, message } = this.state;
 
     if (!isLoaded) {
       return null;
     }
 
     if (!polls) {
-      return <Messages message={'There are not polls yet :('} alertStyle={"info"} />;
+      return <Messages message={noPublicPolls} alertStyle={"info"} />;
     }
 
     return (
       <div>
-        <PageTitle title={'Vote in any of these polls!'} />
+        <Messages message={message} alertStyle={"danger"} />
+        <PageTitle title={allPollList} />
         <ListGenerator polls={polls} deletePoll={false}/>
       </div>
     );

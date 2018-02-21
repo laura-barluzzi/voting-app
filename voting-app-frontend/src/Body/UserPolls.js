@@ -2,6 +2,12 @@ import React, { PureComponent } from 'react';
 
 import { requestDeletePoll, requestUserPolls } from '../backend/Requests';
 import { deletePollById } from '../domain/domain';
+import {
+  noMyPolls,
+  userPollList,
+  fetchingPollsWrong,
+  deletedPollWrong,
+  deletedPollSuccessfully } from '../domain/messages';
 
 import ListGenerator from '../components/ListGenerator';
 import PageTitle from '../components/PageTitle';
@@ -21,16 +27,17 @@ export default class UserPolls extends PureComponent {
 
   loadUserPolls = () => requestUserPolls(this.props.email, this.props.token)
     .then(response => this.setState({ userPolls: response.polls, isLoaded: true }))
-    .catch(error => this.setState({ error, isLoaded: true }))
+    .catch(error => this.setState({ error, isLoaded: true, message: fetchingPollsWrong }))
 
   deletePoll = (poll) => requestDeletePoll(poll, this.props.token)
     .then(response => {
       if (response.deleted) {
         const newPolls =  deletePollById(this.state.userPolls, poll.id);
-        this.setState({ userPolls: newPolls, message: `Poll ${poll.title} deleted.` });
+        const successMessage = deletedPollSuccessfully(poll.title);
+        this.setState({ userPolls: newPolls, message: successMessage });
       }
     })
-    .catch(error => this.setState({ error }))
+    .catch(error => this.setState({ error, message: deletedPollWrong }))
 
   componentDidMount() {
     this.loadUserPolls();
@@ -41,13 +48,13 @@ export default class UserPolls extends PureComponent {
 
     if (!isLoaded) return null;
 
-    if (!userPolls) return <Messages message={'You do not have polls yet'}  alertStyle={"warning"} />;
+    if (!userPolls) return <Messages message={noMyPolls} />;
 
     return (
       <div>
-        <Messages message={message} alertStyle={"success"} />
-        <PageTitle title={'My polls'}/>
-        <ListGenerator polls={userPolls} deletePoll={this.deletePoll}/>
+        <Messages message={message} />
+        <PageTitle title={userPollList} />
+        <ListGenerator polls={userPolls} deletePoll={this.deletePoll} />
       </div>
     );
   }

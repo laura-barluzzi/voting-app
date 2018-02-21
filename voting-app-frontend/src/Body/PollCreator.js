@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 
 import { requestNewPoll } from '../backend/Requests';
+import {
+  createdWrong,
+  pollCreatorTitle,
+  createdSuccessfully } from '../domain/messages';
 
 import Messages from '../components/Messages';
 import PageTitle from '../components/PageTitle';
@@ -26,7 +30,7 @@ export default class PollCreator extends Component {
     if (options.length < 2)
       return this.setState({ message: 'Minimum 2 options required'});
 
-    const newPoll = JSON.parse(JSON.stringify({}));
+    const newPoll = {};
     newPoll.title = title;
     newPoll.options = pollOptions;
     return  this.saveNewPoll(newPoll);
@@ -36,24 +40,22 @@ export default class PollCreator extends Component {
     .then(response => {
       this.setState({ 
         poll: response,
-        message: `Successfully created new poll titled: ${response.title}`,
+        message: createdSuccessfully(response.title),
         saved: true,
         error: null });})
     .catch(error => {
-      this.setState({ error });
+      this.setState({ error, message: createdWrong });
     });
 
   render() {
-    const { poll, message, saved, error } = this.state;
+    const { poll, message, saved } = this.state;
 
     if (saved && poll) return <SuccessView id={poll.id} creator={poll.creator} message={message} />;
 
     return (
       <div>
         <Messages message={message} alertStyle={"danger"} />
-        { error ? <p>{error.error.error}</p> : null }
-
-        <PageTitle title='Creating a new poll' />
+        <PageTitle title={pollCreatorTitle} />
         <PollForm
           title=''
           options={['', '']}
