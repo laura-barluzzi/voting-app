@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {
     "start": "node server.js",
-    "dev-start": "PORT=8081 nodemon server.js"
+    "dev-start": "PORT=8081 nodemon server.js",
+    "heroku-deploy": "cd .. && git subtree push --prefix voting-app-backend heroku master"
   },
   "author": "",
   "license": "ISC",
