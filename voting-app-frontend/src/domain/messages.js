@@ -1,7 +1,7 @@
 // No data found messages
 export const noPublicPolls = "There aren't polls yet :(";
 export const noMyPolls = "You haven't created any polls yet";
-export const noPoll = "This poll no longer exists";
+export const noPoll = "This poll is not currently available";
 
 // Header messages
 export const header = {
@@ -23,7 +23,8 @@ export const success = {
   creating: (title) => `Successfully created poll titled: "${title}"`,
   editing: (title) => `Successfully edited poll titled: "${title}"`,
   saving: "The poll was successfully saved :)",
-  deleting: (title) => `Successfully deleted poll titled: "${title}"`
+  deleting: (title) => `Successfully deleted poll titled: "${title}"`,
+  clipboard: "Url copied to clipboard successfully"
 };
 
 // Error messages

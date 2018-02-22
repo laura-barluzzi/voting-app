@@ -37,7 +37,7 @@ export default class PollsList extends Component {
       <div>
         <Messages message={message} alertStyle={msgStyle} />
         <PageTitle title={titlePages.pollsList} />
-        <ListGenerator polls={polls} deletePoll={false}/>
+        <ListGenerator polls={polls} deletePoll={false} />
       </div>
     );
   }

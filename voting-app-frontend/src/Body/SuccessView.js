@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 import { success } from '../domain/messages';
 
-import Button from '../components/Button';
+import Button from 'react-bootstrap/lib/Button';
 import Messages from '../components/Messages';
 import PageTitle from '../components/PageTitle';
 
@@ -14,13 +14,15 @@ export default class SuccessView extends PureComponent {
   constructor(props) {
     super(props);
 
-    this.state = { host,  saved: false  };
+    this.state = { host,  copied: false  };
   }
 
   onCopy = () =>  this.setState({copied: true})
 
   render() {
-    const { id, creator, message, alertStyle } = this.props;
+    const { copied } = this.state;
+    const { id, creator, alertStyle } = this.props;
+    const message = copied ? success.clipboard : this.props.message;
     const pollUrl = `/poll/${id}/${creator}`;
 
     return (
@@ -30,7 +32,7 @@ export default class SuccessView extends PureComponent {
         <Link to={pollUrl}>See your poll.</Link>
         <p>or</p>
         <CopyToClipboard onCopy={this.onCopy} text={this.state.host + pollUrl}>
-          <Button textKey="clipboard" />
+          <Button>Copy to clipboard</Button>
         </CopyToClipboard>
       </div>
     );
