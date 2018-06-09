@@ -1,6 +1,8 @@
 
 ### Voting app application
 
+[Test me!](https://koalacoder-poll-voting-app.herokuapp.com/#/)
+
 This application is built as required exercise for the `Back End Development Certification` at [freeCodeCamp](https://www.freecodecamp.org).
 
 This application is built using Javascript/Nodejs, React,
